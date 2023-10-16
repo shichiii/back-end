@@ -1,8 +1,7 @@
 from django.db import models
 from CustomAdvertisement.models import CustomAdvertisement
-# Create your models here.
 
 class CustomHistories(models.Model):
-    advertisement = models.ForeignKey(CustomAdvertisement)
+    advertisement = models.ForeignKey(CustomAdvertisement, on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(auto_now_add=True)
     
