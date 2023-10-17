@@ -26,7 +26,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_number = PhoneNumberField(null=True, blank=True, unique=True)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True)
     wallet = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    history = models.ForeignKey(CustomHistories, on_delete=models.CASCADE)
+    history = models.ForeignKey(CustomHistories, on_delete=models.CASCADE, null=True, blank=True)
     #############################################################################
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

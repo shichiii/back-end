@@ -25,6 +25,8 @@ SECRET_KEY = 'django-insecure-&5jm4puv0doo$(@-z&of@nb9*x%kwbe=)!6a3ra!k-tbgbvqkg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+AUTH_USER_MODEL = 'CustomUser.CustomUser'
+
 ALLOWED_HOSTS = ['*']
 
 CORS_ALLOW_METHODS = (
@@ -60,18 +62,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',    
+    'corsheaders',
     'CustomAdvertisement',
     'CustomAdvertisementLocation',
     'CustomCarImage',
     'CustomHistories',
     'CustomUser',
-    'rest_framework',
-    'rest_framework.authtoken',
-    # 'corsheaders'
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
-    # 'CustomUser.apps.CustomuserConfig',
-    
 ]
 
 MIDDLEWARE = [
