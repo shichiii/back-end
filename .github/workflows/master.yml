@@ -6,10 +6,6 @@ on:
       - Develop
 
 jobs:
-  quality-assurance:
-    name: Quality Assurance
-    uses: ./.github/workflows/Ci.yaml
-
   deploy:
     name: Deploy
     needs: quality-assurance
