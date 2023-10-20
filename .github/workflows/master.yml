@@ -29,4 +29,4 @@ jobs:
           END
       - name: Run deploy
         run: |
-          ssh target "cd Shichi/ && docker-compose down && git pull && docker-compose build && docker-compose up -d --force-recreate"
+          ssh target "docker-compose down && git pull && docker-compose build && docker-compose up -d --force-recreate"
