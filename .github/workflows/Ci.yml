@@ -13,7 +13,6 @@ jobs:
         include:
           - db: postgres
             db_port: 5432
-    container: shichi_web
 
     services:
       db:
