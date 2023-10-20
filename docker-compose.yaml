@@ -12,7 +12,7 @@ services:
     ports:
       - 8000:8000
     env_file:
-      - ./Shichi/Shichi/.env
+      - ./Shichi/Shichi/.deploy.env
     depends_on:
       - db
   db:
