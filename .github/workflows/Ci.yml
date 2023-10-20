@@ -21,6 +21,8 @@ jobs:
           POSTGRES_DB: shichidb
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 1234
+        ports:
+          - 5432:5432
 
     steps:
       - uses: actions/checkout@v3
@@ -37,8 +39,8 @@ jobs:
 
       - name: Run Tests
         env:
-          DB: 'db'
-          DB_HOST: 'shichidb'
+          DB: ${{ matrix.db }}
+          DB_HOST: 'db'
           DB_PORT: ${{ matrix.db_port }}
           DB_PASSWORD: 1234
         run: |
