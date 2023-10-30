@@ -23,7 +23,7 @@ class CustomAdvertisement(models.Model):
         ('compact', 'compact'), 
         ('offroad', 'offroad'),
         ('hybrid', 'hybrid'),
-        ('electric', 'electic'),
+        ('electric', 'electric'),
         ('truck', 'truck'),
         ('convertible', 'convertible'), 
         ('passenger-van', 'passenger-van'), 
