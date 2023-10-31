@@ -26,7 +26,7 @@ class customAdvertisementUpdateView(generics.UpdateAPIView):
     serializer_class = customAdvertisementCreateSerializer
 
     
-class ProductSearchView(generics.ListAPIView):
+class customAdvertisementSearchView(generics.ListAPIView):
     queryset = CustomAdvertisement.objects.all()
     serializer_class = customAdvertisementSerializer
     filter_backends = [filters.SearchFilter]
