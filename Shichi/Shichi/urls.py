@@ -15,39 +15,30 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include , re_path
-# from CustomUser.views import *
-from django.conf.urls.static import static
-from django.conf import settings
-from rest_framework.schemas import get_schema_view
-from django.views.generic import TemplateView
-from rest_framework_swagger.views import get_swagger_view
+from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-schema_view = get_schema_view(
-    openapi.Info(
-        title="Shichi API",
-        default_version='v1',
-        description="Welcome to the world of Shichi",
-        terms_of_service="https://www.Shichi.org",
-    ),
-    public=True,
-    permission_classes=(permissions.AllowAny,),
-)
 
+from rest_framework.schemas import get_schema_view
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Snippets API",
+      default_version='v1',
+      description="Test description",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
 urlpatterns = [
-    re_path(r'^doc(?P<format>\.json|\.yaml)$',
-            schema_view.without_ui(cache_timeout=0), name='schema-json'), 
-    path('doc/', schema_view.with_ui('swagger', cache_timeout=0),
-        name='schema-swagger-ui'), 
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0),
-        name='schema-redoc'), 
-    path('docss/', TemplateView.as_view(
-        template_name='docs.html',
-        extra_context={'schema_url':'api_schema'}
-        ), name='swagger-ui'),
-    path('user/', include('CustomUser.urls')),
-    path('advertisement/', include('CustomAdvertisement.urls')),
-]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('admin/', admin.site.urls),
+#    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+#    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+#    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+]
