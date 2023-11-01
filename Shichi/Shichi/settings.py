@@ -99,7 +99,7 @@ ROOT_URLCONF = 'Shichi.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR , 'Shichi')],
+        'DIRS': [os.path.join(BASE_DIR , 'Shichi/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -173,6 +173,7 @@ STATIC_ROOT = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',  # <-- Here ,
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
