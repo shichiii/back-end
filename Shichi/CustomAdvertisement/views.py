@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, viewsets, filters
-from .models import CustomAdvertisement
-from .serializers import customAdvertisementCreateSerializer, customAdvertisementSerializer
+from .models import CustomAdvertisement, Comment
+from .serializers import customAdvertisementCreateSerializer, customAdvertisementSerializer, CommentSerializer
 from rest_framework.response import Response
 
 class customAdvertisementShowView(generics.RetrieveAPIView):
@@ -53,3 +53,9 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
 
         queryset = queryset.filter(price__range=(lower_price_input, upper_price_input))
         return queryset
+    
+    
+    
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
