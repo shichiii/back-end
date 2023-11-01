@@ -49,5 +49,5 @@ urlpatterns = [
         extra_context={'schema_url':'api_schema'}
         ), name='swagger-ui'),
     path('user/', include('CustomUser.urls')),
-    path('advertisement/', include('CustomeAdvertisement.urls')),
+    path('advertisement/', include('CustomAdvertisement.urls')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
