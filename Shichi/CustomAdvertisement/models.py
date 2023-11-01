@@ -2,7 +2,7 @@ from django.db import models
 from CustomCarImage.models import CustomCarImage
 from CustomAdvertisementLocation.models import CustomAdvertisementLocation
 # Create your models here.
-
+from CustomUser.models import CustomUser
 class CustomAdvertisement(models.Model):
     owner_id = models.IntegerField(null=False, blank=False)
     location = models.ForeignKey(CustomAdvertisementLocation, on_delete=models.CASCADE)
@@ -31,3 +31,14 @@ class CustomAdvertisement(models.Model):
     )
     car_category = models.CharField(max_length=20, choices=CAR_CATEGORIES, default='others')
     
+    
+class Comment(models.Model):
+    adv = models.ForeignKey(CustomAdvertisement, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='comments_adv')
+    created_date = models.DateField(auto_now_add=True)
+    text = models.TextField()
+    def __str__(self):
+        return f"{self.adv.car_name} {self.user.first_name}"
+    def is_owner(self, user):
+        return self.user == user
+        
