@@ -23,7 +23,7 @@ class customAdvertisementCreateView(generics.CreateAPIView):
         user = CustomUser.objects.get(email=email)
         if user is None:
             return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-        serializer.save(owner_id=user)
+        serializer.save(owner_id=user.pk)
 
 class customAdvertisementDeleteView(generics.DestroyAPIView):
     queryset = CustomAdvertisement.objects.all()
