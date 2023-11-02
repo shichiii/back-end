@@ -51,4 +51,6 @@ urlpatterns = [
         ), name='swagger-ui'),
     path('user/', include('CustomUser.urls')),
     path('advertisement/', include('CustomAdvertisement.urls')),
+    path('location/', include('CustomAdvertisementLocation.urls')),
+    path('carimage/', include('CustomCarImage.urls')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
