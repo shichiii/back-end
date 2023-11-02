@@ -11,7 +11,7 @@ class customAdvertisementCreateSerializer(serializers.ModelSerializer):
 
 
 class customAdvertisementSerializer(serializers.ModelSerializer):
-    #location = CustomAdvertisementLocationSerializer(read_only=True)
+    location = CustomAdvertisementLocationSerializer(read_only=True)
     car_images = CustomCarImageSerializer(read_only=True, many=True)
 
     class Meta:

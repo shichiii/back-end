@@ -1,13 +1,11 @@
-#from django.db import models
-from django.contrib.gis.db import models
+from django.db import models
 from CustomCarImage.models import CustomCarImage
 from CustomAdvertisementLocation.models import CustomAdvertisementLocation
 # Create your models here.
 
 class CustomAdvertisement(models.Model):
     owner_id = models.IntegerField(null=False, blank=False)
-    #location = models.ForeignKey(CustomAdvertisementLocation, on_delete=models.CASCADE)
-    location = models.PointField()
+    location = models.ForeignKey(CustomAdvertisementLocation, on_delete=models.CASCADE)
     title = models.CharField(max_length=30, blank=True)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
