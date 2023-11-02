@@ -33,7 +33,19 @@ DEBUG = env.bool('DEBUG', default=True)
 
 AUTH_USER_MODEL = 'CustomUser.CustomUser'
 
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000",
+]
+
+CORS_ORIGIN_REGEX_WHITELIST = [
+    "http://localhost:3000",
+]
+
 
 CORS_ALLOW_METHODS = (
     "DELETE",
