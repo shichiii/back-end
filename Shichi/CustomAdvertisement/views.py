@@ -16,7 +16,7 @@ class customAdvertisementViewSet(viewsets.ModelViewSet):
 
 class customAdvertisementCreateView(generics.CreateAPIView):
     queryset = CustomAdvertisement.objects.all()
-    serializer_class = customAdvertisementCreateSerializer
+    serializer_class = customAdvertisementSerializer
     
     def perform_create(self, serializer):
         email = self.request.user
