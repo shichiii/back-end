@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomAdvertisement, Comment
+from .models import CustomAdvertisement, Comment, Rate
 from CustomAdvertisementLocation.serializers import CustomAdvertisementLocationSerializer
 from CustomCarImage.serializers import CustomCarImageSerializer
 
@@ -20,4 +20,9 @@ class customAdvertisementSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
+        fields = '__all__'
+        
+class RateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rate
         fields = '__all__'
