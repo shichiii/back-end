@@ -1,8 +1,15 @@
 from django.shortcuts import render
+<<<<<<< HEAD
 from rest_framework import generics, viewsets, filters
 from .models import CustomAdvertisement, Comment, Rate
 from .serializers import customAdvertisementCreateSerializer, customAdvertisementSerializer, CommentSerializer, RateSerializer
+=======
+from rest_framework import generics, viewsets, filters, status
+from .models import CustomAdvertisement, Comment
+from .serializers import customAdvertisementCreateSerializer, customAdvertisementSerializer, CommentSerializer
+>>>>>>> 43cf4c0645af0017081116f3728b215d77c5b642
 from rest_framework.response import Response
+from CustomUser.models import CustomUser
 
 class customAdvertisementShowView(generics.RetrieveAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -15,7 +22,14 @@ class customAdvertisementViewSet(viewsets.ModelViewSet):
 
 class customAdvertisementCreateView(generics.CreateAPIView):
     queryset = CustomAdvertisement.objects.all()
-    serializer_class = customAdvertisementCreateSerializer
+    serializer_class = customAdvertisementSerializer
+    
+    def perform_create(self, serializer):
+        email = self.request.user
+        user = CustomUser.objects.get(email=email)
+        if user is None:
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        serializer.save(owner_id=user.pk)
 
 class customAdvertisementDeleteView(generics.DestroyAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -60,7 +74,21 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     
+<<<<<<< HEAD
     
 class RateViewSet(viewsets.ModelViewSet):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
+=======
+class CommentCreateView(generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+class CommentDeleteView(generics.DestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+class CommentUpdateView(generics.UpdateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+>>>>>>> 43cf4c0645af0017081116f3728b215d77c5b642
