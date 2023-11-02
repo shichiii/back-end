@@ -1,7 +1,8 @@
 from django.shortcuts import render
+from rest_framework import generics, viewsets, filters
+from .models import CustomAdvertisement, Comment, Rate
+from .serializers import customAdvertisementCreateSerializer, customAdvertisementSerializer, CommentSerializer, RateSerializer
 from rest_framework import generics, viewsets, filters, status
-from .models import CustomAdvertisement, Comment
-from .serializers import customAdvertisementCreateSerializer, customAdvertisementSerializer, CommentSerializer
 from rest_framework.response import Response
 from CustomUser.models import CustomUser
 
@@ -67,7 +68,7 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    
+
 class CommentCreateView(generics.CreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -79,3 +80,20 @@ class CommentDeleteView(generics.DestroyAPIView):
 class CommentUpdateView(generics.UpdateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
+
+class RateViewSet(viewsets.ModelViewSet):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+class RateCreateView(generics.CreateAPIView):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+
+class RateDeleteView(generics.DestroyAPIView):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+
+class RateUpdateView(generics.UpdateAPIView):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+
