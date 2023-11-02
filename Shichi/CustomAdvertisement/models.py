@@ -35,7 +35,7 @@ class CustomAdvertisement(models.Model):
     
 class Comment(models.Model):
     adv = models.ForeignKey(CustomAdvertisement, on_delete=models.CASCADE, related_name='comments')
-    user = models.IntegerField(null=False, blank=False)
+    user_id = models.IntegerField(null=False, blank=False)
     created_date = models.DateField(auto_now_add=True)
     text = models.TextField()
     def __str__(self):
