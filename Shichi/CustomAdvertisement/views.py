@@ -82,7 +82,6 @@ class CommentUpdateView(generics.UpdateAPIView):
     serializer_class = CommentSerializer
 
 
-
 class RateViewSet(viewsets.ModelViewSet):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
@@ -97,3 +96,4 @@ class RateDeleteView(generics.DestroyAPIView):
 class RateUpdateView(generics.UpdateAPIView):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
+
