@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from rest_framework import generics, viewsets, filters
+from rest_framework import generics, viewsets, filters, status
 from .models import CustomAdvertisement, Comment
 from .serializers import customAdvertisementCreateSerializer, customAdvertisementSerializer, CommentSerializer
 from rest_framework.response import Response
+from CustomUser.models import CustomUser
 
 class customAdvertisementShowView(generics.RetrieveAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -16,6 +17,13 @@ class customAdvertisementViewSet(viewsets.ModelViewSet):
 class customAdvertisementCreateView(generics.CreateAPIView):
     queryset = CustomAdvertisement.objects.all()
     serializer_class = customAdvertisementCreateSerializer
+    
+    def perform_create(self, serializer):
+        email = self.request.user
+        user = CustomUser.objects.get(email=email)
+        if user is None:
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        serializer.save(owner_id=user)
 
 class customAdvertisementDeleteView(generics.DestroyAPIView):
     queryset = CustomAdvertisement.objects.all()
