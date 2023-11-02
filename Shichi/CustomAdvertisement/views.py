@@ -68,11 +68,7 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    
-    
-class RateViewSet(viewsets.ModelViewSet):
-    queryset = Rate.objects.all()
-    serializer_class = RateSerializer
+
 class CommentCreateView(generics.CreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -84,3 +80,20 @@ class CommentDeleteView(generics.DestroyAPIView):
 class CommentUpdateView(generics.UpdateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
+
+class RateViewSet(viewsets.ModelViewSet):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+class RateCreateView(generics.CreateAPIView):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+
+class RateDeleteView(generics.DestroyAPIView):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+
+class RateUpdateView(generics.UpdateAPIView):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+
