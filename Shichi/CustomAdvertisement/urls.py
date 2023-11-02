@@ -10,5 +10,5 @@ urlpatterns = [
     path('search/', customAdvertisementSearchView.as_view(), name='advertisement_search'),
     path('filter/', CustomAdvertisementFilterView.as_view(), name='advertisement_filter'),
     
-    path('adv/<int:pk>/add-comment/', CommentViewSet.as_view(), name = 'add_comment'),
+    # path('adv/<int:pk>/add-comment/', CommentViewSet.as_view(), name = 'add_comment'),
 ]
