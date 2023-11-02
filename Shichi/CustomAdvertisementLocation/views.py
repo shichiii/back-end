@@ -1,3 +1,20 @@
 from django.shortcuts import render
+from rest_framework import generics
+from .models import CustomAdvertisementLocation
+from .serializers import CustomAdvertisementLocationSerializer
 
-# Create your views here.
+class CustomAdvertisementLocationListView(generics.ListAPIView):
+    queryset = CustomAdvertisementLocation.objects.all()
+    serializer_class = CustomAdvertisementLocationSerializer
+
+class CustomAdvertisementLocationCreateView(generics.CreateAPIView):
+    queryset = CustomAdvertisementLocation.objects.all()
+    serializer_class = CustomAdvertisementLocationSerializer
+
+class CustomAdvertisementLocationUpdateView(generics.UpdateAPIView):
+    queryset = CustomAdvertisementLocation.objects.all()
+    serializer_class = CustomAdvertisementLocationSerializer
+
+class CustomAdvertisementLocationDeleteView(generics.DestroyAPIView):
+    queryset = CustomAdvertisementLocation.objects.all()
+    serializer_class = CustomAdvertisementLocationSerializer
