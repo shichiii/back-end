@@ -29,4 +29,4 @@ jobs:
           END
       - name: Run deploy
         run: |
-          ssh target "cd / && cd back-end && docker-compose down && git pull origin Develop && docker-compose up -d --force-recreate"
+          ssh target "cd / && cd back-end && docker-compose down && git pull origin Develop && docker image prune -a -f && docker-compose up -d --force-recreate"
