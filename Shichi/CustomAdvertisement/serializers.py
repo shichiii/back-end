@@ -13,6 +13,7 @@ class customAdvertisementCreateSerializer(serializers.ModelSerializer):
 class customAdvertisementSerializer(serializers.ModelSerializer):
     location = CustomAdvertisementLocationSerializer(read_only=True)
     car_images = CustomCarImageSerializer(read_only=True, many=True)
+
     class Meta:
         model = CustomAdvertisement
         fields = ['id', 'owner_id', 'location', 'title', 'start_date', 'end_date', 'price', 'description', 'car_images', 'car_name', 'car_color', 'car_producted_date', 'car_category']
