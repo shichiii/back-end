@@ -47,4 +47,4 @@ urlpatterns = [
     path('location/', include('CustomAdvertisementLocation.urls')),
     path('carimage/', include('CustomCarImage.urls')),
     path('history/', include('CustomHistories.urls')),
-]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
