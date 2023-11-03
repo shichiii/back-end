@@ -38,13 +38,6 @@ ALLOWED_HOSTS = ['*']
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
 
-SWAGGER_SETTINGS = {
-    'USE_SESSION_AUTH': False,
-    'PERSIST_AUTH': True,
-    'LOGIN_URL': 'rest_framework:login',
-    'LOGOUT_URL': 'rest_framework:logout',
-}
-
 CORS_ALLOW_METHODS = (
     "DELETE",
     "GET",
@@ -104,6 +97,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SWAGGER_SETTINGS = {
+    'PERSIST_AUTH': True,
+    'LOGIN_URL': 'user:login',  # This is the URL pattern for token issuance
+    'LOGOUT_URL': 'user:logout',  # This is an example URL pattern for token blacklisting
+    # Other Swagger settings...
+}
 ROOT_URLCONF = 'Shichi.urls'
 
 TEMPLATES = [

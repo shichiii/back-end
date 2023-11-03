@@ -11,7 +11,7 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetCompleteView
 )
-
+app_name = "user"
 
 urlpatterns = [
     path('myshow/', MyCustomUser.as_view(), name='myshow'),
