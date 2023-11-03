@@ -39,6 +39,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path('api/', include('rest_framework.urls')),
     re_path(r'^doc(?P<format>\.json|\.yaml)$',
             schema_view.without_ui(cache_timeout=0), name='schema-json'), 
     path('doc/', schema_view.with_ui('swagger', cache_timeout=0),
@@ -53,4 +54,5 @@ urlpatterns = [
     path('advertisement/', include('CustomAdvertisement.urls')),
     path('location/', include('CustomAdvertisementLocation.urls')),
     path('carimage/', include('CustomCarImage.urls')),
+    path('history/', include('CustomHistories.urls')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
