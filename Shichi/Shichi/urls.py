@@ -32,24 +32,16 @@ schema_view = get_schema_view(
         title="Shichi API",
         default_version='v1',
         description="Welcome to the world of Shichi",
-        terms_of_service="https://www.Shichi.org",
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
 
 urlpatterns = [
-    path('api/', include('rest_framework.urls')),
-    re_path(r'^doc(?P<format>\.json|\.yaml)$',
-            schema_view.without_ui(cache_timeout=0), name='schema-json'), 
-    path('doc/', schema_view.with_ui('swagger', cache_timeout=0),
-        name='schema-swagger-ui'), 
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0),
+        name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0),
-        name='schema-redoc'), 
-    path('docss/', TemplateView.as_view(
-        template_name='docs.html',
-        extra_context={'schema_url':'api_schema'}
-        ), name='swagger-ui'),
+        name='schema-redoc'),
     path('user/', include('CustomUser.urls')),
     path('advertisement/', include('CustomAdvertisement.urls')),
     path('location/', include('CustomAdvertisementLocation.urls')),

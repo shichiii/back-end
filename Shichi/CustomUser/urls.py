@@ -12,6 +12,8 @@ from django.contrib.auth.views import (
     PasswordResetCompleteView
 )
 
+app_name = "user"
+
 # from allauth.account.views import (
 #     PasswordResetView, 
 #     PasswordResetDoneView, 
