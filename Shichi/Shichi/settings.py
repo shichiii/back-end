@@ -106,8 +106,6 @@ MIDDLEWARE = [
 SWAGGER_SETTINGS = {
     'PERSIST_AUTH': True,
     'LOGIN_URL': 'user:login',  # This is the URL pattern for token issuance
-    'LOGOUT_URL': 'user:logout',  # This is an example URL pattern for token blacklisting
-    # Other Swagger settings...
 }
 ROOT_URLCONF = 'Shichi.urls'
 
