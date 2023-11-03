@@ -33,10 +33,10 @@ DEBUG = env.bool('DEBUG', default=True)
 
 AUTH_USER_MODEL = 'CustomUser.CustomUser'
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS=['*']
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
+
 
 CORS_ALLOW_METHODS = (
     "DELETE",
@@ -179,7 +179,7 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -242,12 +242,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'shichiiii777@gmail.com'
-# EMAIL_HOST_PASSWORD = 'eightminusone'
-
-EMAIL_HOST_USER = 'troyteam22@gmail.com'
-
-EMAIL_HOST_PASSWORD ='yvcpvkazuuqnvguy'
-
+EMAIL_HOST_USER = 'shichiiii777@gmail.com'
+EMAIL_HOST_PASSWORD = 'eightminusone'
 DEFAULT_FROM_EMAIL = 'shichiiii777@gmail.com'
-SERVER_EMAIL = 'shichiiii777@gmail.com'
+SERVER_EMAIL = 'eightminusone'
