@@ -33,10 +33,10 @@ DEBUG = env.bool('DEBUG', default=True)
 
 AUTH_USER_MODEL = 'CustomUser.CustomUser'
 
-ALLOWED_HOSTS = ['*']
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
+
 
 CORS_ALLOW_METHODS = (
     "DELETE",
@@ -244,4 +244,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'shichiiii777@gmail.com'
 EMAIL_HOST_PASSWORD = 'eightminusone'
-
+DEFAULT_FROM_EMAIL = 'shichiiii777@gmail.com'
+SERVER_EMAIL = 'eightminusone'
