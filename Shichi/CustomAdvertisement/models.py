@@ -8,7 +8,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class CustomAdvertisement(models.Model):
     owner_id = models.IntegerField(null=False, blank=False)
     location = models.ForeignKey(CustomAdvertisementLocation, on_delete=models.CASCADE)
-    title = models.CharField(max_length=30, blank=True)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
@@ -17,7 +16,16 @@ class CustomAdvertisement(models.Model):
     car_images = models.ManyToManyField(CustomCarImage)
     car_name = models.CharField(max_length=30, blank=True)
     car_color = models.CharField(max_length=30, blank=True)
-    car_producted_date = models.DateField()
+    car_produced_date = models.DateField()
+    car_seat_count = models.IntegerField(null=True, blank=True)
+    car_door_count = models.IntegerField(null=True, blank=True)
+    car_Is_cooler = models.BooleanField(default=False)
+    CAR_GEARBOX = (
+        ('manual', 'manual'),
+        ('automatic', 'automatic'),
+    )
+    car_gearbox = models.CharField(max_length=20, choices=CAR_GEARBOX, default='manual')
+    car_fuel = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     CAR_CATEGORIES = (
         ('economy', 'economy'),
         ('luxury', 'luxury'),
