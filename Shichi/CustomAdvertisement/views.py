@@ -30,7 +30,7 @@ class customAdvertisementSearchView(generics.ListAPIView):
     queryset = CustomAdvertisement.objects.all()
     serializer_class = customAdvertisementSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['car_name', 'car_category', 'title']
+    search_fields = ['car_name']
     
 class CustomAdvertisementFilterView(generics.ListAPIView):
     queryset = CustomAdvertisement.objects.all()
