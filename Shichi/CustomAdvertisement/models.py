@@ -12,6 +12,7 @@ class CustomAdvertisement(models.Model):
     end_date = models.DateTimeField()
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     description = models.TextField(null=True, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)
        
     car_images = models.ManyToManyField(CustomCarImage)
     car_name = models.CharField(max_length=30, blank=True)
