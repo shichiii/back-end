@@ -28,7 +28,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=30, blank=True)
     phone_number = PhoneNumberField(null=True, blank=True, unique=True)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True)
-    wallet = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     history = models.ForeignKey(CustomHistories, on_delete=models.CASCADE, null=True, blank=True)
     #############################################################################
     is_active = models.BooleanField(default=True)
@@ -47,3 +46,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+class Wallet(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
