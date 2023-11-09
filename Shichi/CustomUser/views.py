@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
-from .models import CustomUser
+from .models import CustomUser, Wallet
 from .serializers import CustomUserSerializer, LoginSignupCustomUserSerializer, UpdateCustomUserSerializer
+from .serializers import WalletSerializer
 from django.contrib.auth.hashers import make_password, check_password
 
 # Create your views here.
@@ -126,4 +127,20 @@ class PasswordResetConfirmView(APIView):
                 return Response({'error': 'Invalid token.'}, status=status.HTTP_400_BAD_REQUEST)
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
             return Response({'error': 'Invalid user ID.'}, status=status.HTTP_400_BAD_REQUEST)
-     
+ 
+
+class WalletListView(generics.ListAPIView):
+    queryset = Wallet.objects.all()
+    serializer_class = WalletSerializer
+
+class WalletCreateView(generics.CreateAPIView):
+    queryset = Wallet.objects.all()
+    serializer_class = WalletSerializer
+
+class WalletUpdateView(generics.UpdateAPIView):
+    queryset = Wallet.objects.all()
+    serializer_class = WalletSerializer
+
+class WalletDeleteView(generics.DestroyAPIView):
+    queryset = Wallet.objects.all()
+    serializer_class = WalletSerializer
