@@ -1,6 +1,7 @@
 from django.urls import path, include
 from .views import CustomUserViewSet, CreateCustomUser, MyCustomUser, ShowCustomUser, UpdateCustomUser, DeleteCustomUser
 from .views import PasswordResetView, PasswordResetConfirmView
+from .views import WalletListView, WalletCreateView, WalletUpdateView, WalletDeleteView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -26,6 +27,11 @@ urlpatterns = [
     path('password-reset/', PasswordResetView.as_view(),name='password_reset'),
     path('password-reset/done/', PasswordResetDoneView.as_view(),name='password_reset_done'),
     path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
+    
+    path('WalletList/', WalletListView.as_view(), name='Walletlist'),
+    path('WalletCreate/', WalletCreateView.as_view(), name='WalletCreate'),
+    path('WalletUpdate/<int:pk>/', WalletUpdateView.as_view(), name='WalletUpdate'),
+    # path('WalletDelete/<int:pk>/', DeleteCustomUser.as_view(), name='WalletDelete'),
     # path('password-reset-complete/',PasswordResetCompleteView.as_view(),name='password_reset_complete'),
 ]
 
