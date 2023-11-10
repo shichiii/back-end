@@ -5,6 +5,7 @@ from .serializers import customAdvertisementCreateSerializer, customAdvertisemen
 from rest_framework import generics, viewsets, filters, status
 from rest_framework.response import Response
 from CustomUser.models import CustomUser
+from CustomAdvertisementLocation.models import CustomAdvertisementLocation
 
 class customAdvertisementShowView(generics.RetrieveAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -53,12 +54,25 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
         upper_price_input = self.request.query_params.get('upper_price', 99999999999999999)
         car_category_input = self.request.query_params.get('car_category', None)
         car_color_input = self.request.query_params.get('car_color', None)
+        start_date_input = self.request.query_params.get('start_date', None)
+        end_date_input = self.request.query_params.get('end_date', None)
+        state_input = self.request.query_params.get('state', None)
         
         if car_category_input:
             queryset = queryset.filter(car_category__icontains=car_category_input)
 
         if car_color_input:
             queryset = queryset.filter(car_color__icontains=car_color_input)
+        
+        if start_date_input:
+            queryset = queryset.filter(start_date__icontains=start_date_input)
+            
+        if end_date_input:
+            queryset = queryset.filter(end_date__icontains=end_date_input)
+            
+        if state_input:
+            location = CustomAdvertisementLocation.objects.get(state = state_input)
+            queryset = queryset.filter(location__icontains = location.pk)
 
         queryset = queryset.filter(price__range=(lower_price_input, upper_price_input))
         return queryset
