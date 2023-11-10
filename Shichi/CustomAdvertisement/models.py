@@ -15,7 +15,15 @@ class CustomAdvertisement(models.Model):
        
     car_images = models.ManyToManyField(CustomCarImage)
     car_name = models.CharField(max_length=30, blank=True)
-    car_color = models.CharField(max_length=30, blank=True)
+    CAR_COLOR = (
+        ('black', 'black'),
+        ('white', 'white'),
+        ('gray', 'gray'), 
+        ('brown', 'brown'),
+        ('navy-blue', 'navy-blue'),
+        ('others', 'others'),   
+    )
+    car_color = models.CharField(max_length=20, choices=CAR_COLOR, default='others')
     car_produced_date = models.DateField()
     car_seat_count = models.IntegerField(null=True, blank=True)
     car_door_count = models.IntegerField(null=True, blank=True)
