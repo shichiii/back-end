@@ -261,7 +261,7 @@ AZ_IRANIAN_BANK_GATEWAYS = {
     #    },
        'IDPAY': {
            'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
-           'METHOD': 'POST',  # GET or POST
+           'METHOD': 'POST',
            'X_SANDBOX': 1,  # 0 disable, 1 active
        },
     #    'BAHAMTA': {

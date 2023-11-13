@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views import CustomUserViewSet, CreateCustomUser, MyCustomUser, ShowCustomUser, UpdateCustomUser, DeleteCustomUser
 from .views import PasswordResetView, PasswordResetConfirmView
 from .views import WalletListView, WalletCreateView, WalletUpdateView, WalletDeleteView
-from .views import go_to_gateway_view 
+from .views import go_to_gateway_view, callback_gateway_view
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -38,5 +38,6 @@ urlpatterns = [
     
     path('bankgateways/', az_bank_gateways_urls()),
     path('go-to-gateway/', go_to_gateway_view),
+    path('callback-gateway/', callback_gateway_view),
 ]
 
