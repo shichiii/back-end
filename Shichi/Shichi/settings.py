@@ -247,3 +247,7 @@ EMAIL_HOST_USER = 'troyteam22@gmail.com'
 EMAIL_HOST_PASSWORD ='yvcpvkazuuqnvguy'
 DEFAULT_FROM_EMAIL = 'troyteam22@gmail.com'
 SERVER_EMAIL = 'troyteam22@gmail.com'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
