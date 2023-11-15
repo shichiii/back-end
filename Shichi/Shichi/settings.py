@@ -13,7 +13,7 @@ from datetime import timedelta
 from pathlib import Path
 from environs import Env
 import os
-
+import channels.middleware
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -89,11 +89,14 @@ INSTALLED_APPS = [
     'CustomCarImage',
     'CustomHistories',
     'CustomUser',
+    'Chat',
     'azbankgateways',
+    'channels'
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    # 'channels.middleware.WebSocketMiddleware'
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -109,6 +112,8 @@ SWAGGER_SETTINGS = {
     'LOGIN_URL': 'user:login',  # This is the URL pattern for token issuance
 }
 ROOT_URLCONF = 'Shichi.urls'
+
+ASGI_APPLICATION = 'Shichi.asgi.application'
 
 TEMPLATES = [
     {
@@ -283,3 +288,9 @@ AZ_IRANIAN_BANK_GATEWAYS = {
 
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
