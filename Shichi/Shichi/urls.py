@@ -48,4 +48,5 @@ urlpatterns = [
     path('location/', include('CustomAdvertisementLocation.urls')),
     path('carimage/', include('CustomCarImage.urls')),
     path('history/', include('CustomHistories.urls')),
+    path('payments/', include('Payments.urls')),
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

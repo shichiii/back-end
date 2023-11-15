@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     'CustomHistories',
     'CustomUser',
     'azbankgateways',
+    'Payments',
 ]
 
 MIDDLEWARE = [
@@ -255,21 +256,18 @@ AUTHENTICATION_BACKENDS = [
 
 AZ_IRANIAN_BANK_GATEWAYS = {
    'GATEWAYS': {
-    #    'ZARINPAL': {
-    #        'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
-    #        'SANDBOX': 0,  # 0 disable, 1 active
-    #    },
-       'IDPAY': {
-           'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
-           'METHOD': 'POST',
-           'X_SANDBOX': 1,  # 0 disable, 1 active
+       'ZARINPAL': {
+           'MERCHANT_CODE': '866f5a02-98db-42b4-a0e8-6cd0cc69ced2',
+           'SANDBOX': 1,  # 0 disable, 1 active
        },
-    #    'BAHAMTA': {
+    #    'IDPAY': {
     #        'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
+    #        'METHOD': 'POST',
+    #        'X_SANDBOX': 0,  # 0 disable, 1 active
     #    },
    },
    'IS_SAMPLE_FORM_ENABLE': True, # اختیاری و پیش فرض غیر فعال است
-   'DEFAULT': 'IDPAY',
+   'DEFAULT': 'ZARINPAL',
    'CURRENCY': 'IRR', # اختیاری
    'TRACKING_CODE_QUERY_PARAM': 'tc', # اختیاری
    'TRACKING_CODE_LENGTH': 16, # اختیاری
