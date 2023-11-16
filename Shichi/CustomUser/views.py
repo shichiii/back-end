@@ -145,17 +145,3 @@ class RequestForWallet(APIView):
             return Response(status=status.HTTP_403_FORBIDDEN)
             
             
-class UpdateCustomUserWallet(generics.UpdateAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = UpdateCustomUserWalletSerializer
-
-    def perform_update(self, serializer):
-        instance = serializer.instance
-        email = self.request.user
-        user = CustomUser.objects.get(email=email)
-        if user != instance:
-            print(instance , user)
-            return Response({'error': 'User Not Allowed.'}, status=status.HTTP_403_FORBIDDEN)
-        serializer.save()
-        return
-

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import CustomUserViewSet, CreateCustomUser, MyCustomUser, ShowCustomUser, UpdateCustomUser, DeleteCustomUser
-from .views import PasswordResetView, PasswordResetConfirmView, UpdateCustomUserWallet, RequestForWallet
+from .views import PasswordResetView, PasswordResetConfirmView, RequestForWallet
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
