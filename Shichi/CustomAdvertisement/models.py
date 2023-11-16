@@ -8,8 +8,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class CustomAdvertisement(models.Model):
     owner_id = models.IntegerField(null=False, blank=False)
     location = models.ForeignKey(CustomAdvertisementLocation, on_delete=models.CASCADE)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    start_date = models.DateField()
+    end_date = models.DateField()
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     description = models.TextField(null=True, blank=True)
        
