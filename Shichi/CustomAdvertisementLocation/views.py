@@ -3,6 +3,11 @@ from rest_framework import generics
 from .models import CustomAdvertisementLocation
 from .serializers import CustomAdvertisementLocationSerializer
 
+class customAdvertisementLocationShowView(generics.RetrieveAPIView):
+    queryset = CustomAdvertisementLocation.objects.all()
+    serializer_class = CustomAdvertisementLocationSerializer
+    lookup_field = 'id'
+
 class CustomAdvertisementLocationListView(generics.ListAPIView):
     queryset = CustomAdvertisementLocation.objects.all()
     serializer_class = CustomAdvertisementLocationSerializer
