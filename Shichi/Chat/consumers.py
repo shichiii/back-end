@@ -1,6 +1,7 @@
 import json
 from channels.auth import AuthMiddlewareStack , login
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.exceptions import DenyConnection
 from asgiref.sync import sync_to_async, async_to_sync
 from .models import ChatRoom, Message
 from channels.middleware import BaseMiddleware
@@ -46,6 +47,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         self.room_group_name = f'chat_{self.room_id}'
+        
+        if await self.allowd() == False:
+            return DenyConnection
         # breakpoint() 
         # Join room group
         await self.channel_layer.group_add(
@@ -97,3 +101,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def save_message(self, message):
         chatroom = ChatRoom.objects.get(id=self.room_id)
         Message.objects.create(room=chatroom, sender=self.scope['user'], content=message)
+    
+    @sync_to_async
+    def allowd(self):
+        does_room_exists = ChatRoom.objects.filter(id=self.room_id).exists()
+        if not does_room_exists:
+            return False
+        return True
