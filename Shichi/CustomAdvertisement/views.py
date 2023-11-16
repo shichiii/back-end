@@ -1,9 +1,11 @@
 from django.shortcuts import render
+from rest_framework import generics, viewsets, filters
+from .models import CustomAdvertisement, Comment, Rate
+from .serializers import customAdvertisementCreateSerializer, customAdvertisementSerializer, CommentSerializer, RateSerializer
 from rest_framework import generics, viewsets, filters, status
-from .models import CustomAdvertisement, Comment
-from .serializers import customAdvertisementCreateSerializer, customAdvertisementSerializer, CommentSerializer
 from rest_framework.response import Response
 from CustomUser.models import CustomUser
+from CustomAdvertisementLocation.models import CustomAdvertisementLocation
 
 class customAdvertisementShowView(generics.RetrieveAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -16,13 +18,13 @@ class customAdvertisementViewSet(viewsets.ModelViewSet):
 
 class customAdvertisementCreateView(generics.CreateAPIView):
     queryset = CustomAdvertisement.objects.all()
-    serializer_class = customAdvertisementSerializer
+    serializer_class = customAdvertisementCreateSerializer
     
     def perform_create(self, serializer):
-        email = self.request.user
-        user = CustomUser.objects.get(email=email)
-        if user is None:
-            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        user = self.request.user
+        # user = CustomUser.objects.get(id=user.id)
+        # if user is None:
+        #     return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
         serializer.save(owner_id=user.pk)
 
 class customAdvertisementDeleteView(generics.DestroyAPIView):
@@ -38,7 +40,7 @@ class customAdvertisementSearchView(generics.ListAPIView):
     queryset = CustomAdvertisement.objects.all()
     serializer_class = customAdvertisementSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['car_name', 'car_category', 'title']
+    search_fields = ['car_name']
     
 class CustomAdvertisementFilterView(generics.ListAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -52,12 +54,25 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
         upper_price_input = self.request.query_params.get('upper_price', 99999999999999999)
         car_category_input = self.request.query_params.get('car_category', None)
         car_color_input = self.request.query_params.get('car_color', None)
+        start_date_input = self.request.query_params.get('start_date', None)
+        end_date_input = self.request.query_params.get('end_date', None)
+        state_input = self.request.query_params.get('state', None)
         
         if car_category_input:
             queryset = queryset.filter(car_category__icontains=car_category_input)
 
         if car_color_input:
             queryset = queryset.filter(car_color__icontains=car_color_input)
+        
+        if start_date_input:
+            queryset = queryset.filter(start_date__icontains=start_date_input)
+            
+        if end_date_input:
+            queryset = queryset.filter(end_date__icontains=end_date_input)
+            
+        if state_input:
+            location = CustomAdvertisementLocation.objects.get(state = state_input)
+            queryset = queryset.filter(location__icontains = location.pk)
 
         queryset = queryset.filter(price__range=(lower_price_input, upper_price_input))
         return queryset
@@ -67,3 +82,32 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
+class CommentCreateView(generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+class CommentDeleteView(generics.DestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+class CommentUpdateView(generics.UpdateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+
+class RateViewSet(viewsets.ModelViewSet):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+class RateCreateView(generics.CreateAPIView):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+
+class RateDeleteView(generics.DestroyAPIView):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+
+class RateUpdateView(generics.UpdateAPIView):
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+

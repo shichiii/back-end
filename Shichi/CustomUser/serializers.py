@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser
+from .models import CustomUser, Wallet
 # from CustomUserPermissions.serializers import PermissionSerializer
 from django.contrib.auth.hashers import make_password, check_password
 
@@ -18,3 +18,12 @@ class UpdateCustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'first_name', 'last_name', 'phone_number', 'profile_image']
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    
+    
+class WalletSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Wallet
+        fields = '__all__'

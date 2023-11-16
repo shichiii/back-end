@@ -33,7 +33,10 @@ DEBUG = env.bool('DEBUG', default=True)
 
 AUTH_USER_MODEL = 'CustomUser.CustomUser'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS=['*']
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 CORS_ALLOW_METHODS = (
     "DELETE",
@@ -62,6 +65,12 @@ CORS_ALLOW_HEADERS = [
 # Application definition
 
 INSTALLED_APPS = [
+    
+    # 'django.contrib.sites',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,6 +89,8 @@ INSTALLED_APPS = [
     'CustomCarImage',
     'CustomHistories',
     'CustomUser',
+    'azbankgateways',
+    'Payments',
 ]
 
 MIDDLEWARE = [
@@ -94,6 +105,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SWAGGER_SETTINGS = {
+    'PERSIST_AUTH': True,
+    'LOGIN_URL': 'user:login',  # This is the URL pattern for token issuance
+}
 ROOT_URLCONF = 'Shichi.urls'
 
 TEMPLATES = [
@@ -107,13 +122,14 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # 'allauth.account.context_processors.account',
+                # 'allauth.socialaccount.context_processors.socialaccount',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'Shichi.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -165,7 +181,10 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -218,3 +237,47 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'troyteam22@gmail.com'
+
+EMAIL_HOST_PASSWORD ='yvcpvkazuuqnvguy'
+DEFAULT_FROM_EMAIL = 'troyteam22@gmail.com'
+SERVER_EMAIL = 'troyteam22@gmail.com'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+AZ_IRANIAN_BANK_GATEWAYS = {
+   'GATEWAYS': {
+       'ZARINPAL': {
+           'MERCHANT_CODE': '866f5a02-98db-42b4-a0e8-6cd0cc69ced2',
+           'SANDBOX': 1,  # 0 disable, 1 active
+       },
+    #    'IDPAY': {
+    #        'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
+    #        'METHOD': 'POST',
+    #        'X_SANDBOX': 0,  # 0 disable, 1 active
+    #    },
+   },
+   'IS_SAMPLE_FORM_ENABLE': True, # اختیاری و پیش فرض غیر فعال است
+   'DEFAULT': 'ZARINPAL',
+   'CURRENCY': 'IRR', # اختیاری
+   'TRACKING_CODE_QUERY_PARAM': 'tc', # اختیاری
+   'TRACKING_CODE_LENGTH': 16, # اختیاری
+   'SETTING_VALUE_READER_CLASS': 'azbankgateways.readers.DefaultReader', # اختیاری
+   'BANK_PRIORITIES': [
+   ],
+   'IS_SAFE_GET_GATEWAY_PAYMENT': False, #اختیاری، بهتر است True بزارید.
+   'CUSTOM_APP': None, # اختیاری 
+}
+
+
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
