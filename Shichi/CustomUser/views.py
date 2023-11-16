@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
 from .models import CustomUser
-from .serializers import UpdateCustomUserWalletSerializer, CustomUserSerializer, LoginSignupCustomUserSerializer, UpdateCustomUserSerializer
+from .serializers import SetPasswordResetSerializer, UpdateCustomUserWalletSerializer, CustomUserSerializer, LoginSignupCustomUserSerializer, UpdateCustomUserSerializer
 from django.contrib.auth.hashers import make_password, check_password
 
 # Create your views here.
@@ -76,6 +76,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail  # Import send_mail for sending the email.
 
 class PasswordResetView(APIView):
+    serializer_class = PasswordResetSerializer
+    
     def post(self, request):
         serializer = PasswordResetSerializer(data=request.data)
 
@@ -112,6 +114,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from Payments.views import go_to_gateway_view
 class PasswordResetConfirmView(APIView):
+    serializer_class = SetPasswordResetSerializer
     def post(self, request, uidb64, token):
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
@@ -119,7 +122,7 @@ class PasswordResetConfirmView(APIView):
             if default_token_generator.check_token(user, token):
                 # valid; allow the user to reset the password
                 new_password = request.data.get('new_password')
-                user.set_password(new_password)
+                user.password = make_password(new_password)
                 user.save()
                 return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)
             else:

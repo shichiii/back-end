@@ -26,3 +26,6 @@ class UpdateCustomUserWalletSerializer(serializers.ModelSerializer):
 
 class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField()
+
+class SetPasswordResetSerializer(serializers.Serializer):
+    new_password = serializers.CharField()
