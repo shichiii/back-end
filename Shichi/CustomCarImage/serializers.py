@@ -4,4 +4,4 @@ from .models import CustomCarImage
 class CustomCarImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomCarImage
-        fields = ('image', 'index')
+        fields = ['image', 'index']

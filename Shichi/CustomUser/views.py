@@ -1,9 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
-from .models import CustomUser, Wallet
-from .serializers import CustomUserSerializer, LoginSignupCustomUserSerializer, UpdateCustomUserSerializer
-from .serializers import WalletSerializer
+from .models import CustomUser
+from .serializers import SetPasswordResetSerializer, UpdateCustomUserWalletSerializer, CustomUserSerializer, LoginSignupCustomUserSerializer, UpdateCustomUserSerializer
 from django.contrib.auth.hashers import make_password, check_password
 
 # Create your views here.
@@ -77,6 +76,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail  # Import send_mail for sending the email.
 
 class PasswordResetView(APIView):
+    serializer_class = PasswordResetSerializer
+    
     def post(self, request):
         serializer = PasswordResetSerializer(data=request.data)
 
@@ -111,8 +112,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-
+from Payments.views import go_to_gateway_view
 class PasswordResetConfirmView(APIView):
+    serializer_class = SetPasswordResetSerializer
     def post(self, request, uidb64, token):
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
@@ -120,7 +122,7 @@ class PasswordResetConfirmView(APIView):
             if default_token_generator.check_token(user, token):
                 # valid; allow the user to reset the password
                 new_password = request.data.get('new_password')
-                user.set_password(new_password)
+                user.password = make_password(new_password)
                 user.save()
                 return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)
             else:
@@ -128,22 +130,21 @@ class PasswordResetConfirmView(APIView):
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
             return Response({'error': 'Invalid user ID.'}, status=status.HTTP_400_BAD_REQUEST)
  
-
-class WalletListView(generics.ListAPIView):
-    queryset = Wallet.objects.all()
-    serializer_class = WalletSerializer
-
-class WalletCreateView(generics.CreateAPIView):
-    queryset = Wallet.objects.all()
-    serializer_class = WalletSerializer
-
-class WalletUpdateView(generics.UpdateAPIView):
-    queryset = Wallet.objects.all()
-    serializer_class = WalletSerializer
-
-class WalletDeleteView(generics.DestroyAPIView):
-    queryset = Wallet.objects.all()
-    serializer_class = WalletSerializer
     
-
-
+class RequestForWallet(APIView):
+    serializer_class = UpdateCustomUserWalletSerializer
+    def post(self, request):
+        email = request.user
+        user = CustomUser.objects.get(email=email)
+        if user is not None:
+            ser = UpdateCustomUserWalletSerializer(data=self.request.data)
+            if ser.is_valid():
+                wallet = ser.validated_data['wallet']
+                res = go_to_gateway_view(self.request, user.email, wallet)
+                return Response(str(res.url), status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+            
+            
