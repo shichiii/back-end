@@ -12,20 +12,29 @@ from rest_framework_simplejwt.tokens import AccessToken
 class TokenAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         # Get the query string from the scope
-        query_string = scope.get("query_string", b"").decode("utf-8")
+        query_string = scope.get("headers", b"")
 
         # Parse the query string to get the token
-        token_param = next((param.split("=") for param in query_string.split("&") if param.startswith("token=")), None)
+        token_param = None
+        for name, value in query_string:
+            if name == b'authorization':
+                # Check if the value starts with 'Bearer '
+                if value.startswith(b'Bearer '):
+                    # Extract the token (excluding 'Bearer ')
+                    token_param = value[len(b'Bearer '):].decode('utf-8')
+                    break
 
         if token_param:
             # Get the user from the token and set it in the scope
-            user = await self.get_user_from_token(token_param[1])
+            user = await self.get_user_from_token(token_param)
             scope["user"] = user
 
         return await super().__call__(scope, receive, send)
+
     @database_sync_to_async
     def get_user_from_token(self, access_token):
         try:
+            # print(access_token)
             decoded_token = AccessToken(token=access_token)
             user = CustomUser.objects.get(id=decoded_token['user_id'])
             return user
@@ -37,7 +46,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         self.room_group_name = f'chat_{self.room_id}'
-        # await login(self.scope, user)
         # breakpoint() 
         # Join room group
         await self.channel_layer.group_add(
@@ -55,20 +63,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     async def receive(self, text_data):
-        # breakpoint()
-        sender = self.scope['user'].last_name
-        user = self.scope['user']
-        # print(f"User {user} sent a message: {text_data}")
-        if sender == "" :
-            sender = "Anonymous"
+        
         message = json.loads(text_data)
         message = message["message"]
+        if "user" in self.scope :
+            if self.scope['user'].is_anonymous == True:
+                sender = "Anonymous"
+            else:
+                sender = self.scope['user'].last_name            
+                # Register the message in the database.
+                chat_room = await self.save_message(message)
+
+        else : sender = "Anonymous"
+
         message_send = {}
         message_send['message'] = message
         message_send['sender'] = sender
-        # Register the message in the database.
-        chat_room = sync_to_async( ChatRoom.objects.get)(id=self.room_id)
-        message_save = sync_to_async( Message.objects.create)(room=chat_room, sender=self.scope['user'], content=message)
 
         # Broadcast message to a room group
         await self.channel_layer.group_send(
@@ -82,3 +92,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def send_message(self, event):
         # Send a message to WebSocket
         await self.send(text_data=event['message'])
+
+    @sync_to_async
+    def save_message(self, message):
+        chatroom = ChatRoom.objects.get(id=self.room_id)
+        Message.objects.create(room=chatroom, sender=self.scope['user'], content=message)
