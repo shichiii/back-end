@@ -4,6 +4,11 @@ from .models import CustomCarImage
 from .serializers import CustomCarImageSerializer
 from drf_yasg.utils import swagger_auto_schema
 
+class CustomCarImageShowView(generics.RetrieveAPIView):
+    queryset = CustomCarImage.objects.all()
+    serializer_class = CustomCarImageSerializer
+    lookup_field = 'id'
+
 class CustomCarImageListView(generics.ListAPIView):
     queryset = CustomCarImage.objects.all()
     serializer_class = CustomCarImageSerializer
