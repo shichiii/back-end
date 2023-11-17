@@ -12,7 +12,7 @@ class CustomAdvertisement(models.Model):
     end_date = models.DateField()
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     description = models.TextField(null=True, blank=True)
-       
+    car_image2 = models.ImageField(upload_to='car_images2/', blank=True)  
     car_images = models.ManyToManyField(CustomCarImage)
     car_name = models.CharField(max_length=30, blank=True)
     CAR_COLOR = (
