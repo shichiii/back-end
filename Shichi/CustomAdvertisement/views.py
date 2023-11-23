@@ -5,7 +5,6 @@ from .serializers import customAdvertisementCreateSerializer, customAdvertisemen
 from rest_framework import generics, viewsets, filters, status
 from rest_framework.response import Response
 from CustomUser.models import CustomUser
-from CustomAdvertisementLocation.models import CustomAdvertisementLocation
 
 class customAdvertisementShowView(generics.RetrieveAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -71,8 +70,7 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
             queryset = queryset.filter(end_date__icontains=end_date_input)
             
         if state_input:
-            location = CustomAdvertisementLocation.objects.get(state = state_input)
-            queryset = queryset.filter(location__icontains = location.pk)
+            queryset = queryset.filter(location_state__icontains=state_input)
 
         queryset = queryset.filter(price__range=(lower_price_input, upper_price_input))
         return queryset
