@@ -6,7 +6,7 @@ from django.db.models import Avg
 class customAdvertisementCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomAdvertisement
-        fields = ['id', 'owner_id', 'start_date', 'end_date', 'price', 'description', 'car_images', 'car_name', 'car_color', 'car_produced_date','car_seat_count','car_door_count', 'car_Is_cooler', 'car_gearbox', 'car_fuel', 'car_category', 'location_state', 'location_geo_width', 'location_geo_lenght']
+        fields = ['id', 'owner_id', 'start_date', 'end_date', 'price', 'description', 'car_images', 'car_name', 'car_color', 'car_produced_date','car_seat_count','car_door_count', 'car_Is_cooler', 'car_gearbox', 'car_fuel', 'car_category', 'location_state', 'location_geo_width', 'location_geo_length']
         read_only_fields = ['id', 'owner_id', 'created_date']
 
 
@@ -16,7 +16,7 @@ class customAdvertisementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomAdvertisement
-        fields = ['id', 'average_rating', 'owner_id', 'start_date', 'end_date', 'price', 'description', 'car_images', 'car_name', 'car_color', 'car_produced_date', 'car_seat_count','car_door_count', 'car_Is_cooler', 'car_gearbox', 'car_fuel', 'car_category', 'location_state', 'location_geo_width', 'location_geo_lenght']
+        fields = ['id', 'average_rating', 'owner_id', 'start_date', 'end_date', 'price', 'description', 'car_images', 'car_name', 'car_color', 'car_produced_date', 'car_seat_count','car_door_count', 'car_Is_cooler', 'car_gearbox', 'car_fuel', 'car_category', 'location_state', 'location_geo_width', 'location_geo_length']
     
     def get_average_rating(self , obj):
         print(obj.id)
