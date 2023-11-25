@@ -92,8 +92,8 @@ class PasswordResetView(APIView):
             current_site = get_current_site(request)
 
             uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-            reset_url = f"http://{current_site.domain}/user/password-reset-confirm/{uidb64}/{token}/"
-
+            # reset_url = f"http://{current_site.domain}/user/password-reset-confirm/{uidb64}/{token}/"
+            reset_url = f"Localhost:3000/reset/{token}/"
             print(f"Reset URL: {reset_url}")
 
             subject = "Password Reset Request"
