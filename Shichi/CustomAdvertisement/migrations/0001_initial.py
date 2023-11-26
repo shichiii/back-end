@@ -10,7 +10,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('CustomCarImage', '0001_initial'),
-        ('CustomAdvertisementLocation', '0001_initial'),
     ]
 
     operations = [
@@ -29,7 +28,6 @@ class Migration(migrations.Migration):
                 ('car_producted_date', models.DateField()),
                 ('car_category', models.CharField(choices=[('economy', 'economy'), ('luxury', 'luxury'), ('compact', 'compact'), ('offroad', 'offroad'), ('hybrid', 'hybrid'), ('electric', 'electic'), ('truck', 'truck'), ('convertible', 'convertible'), ('passenger-van', 'passenger-van'), ('mini-van', 'mini-van'), ('others', 'others')], default='others', max_length=20)),
                 ('car_images', models.ManyToManyField(to='CustomCarImage.customcarimage')),
-                ('location', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='CustomAdvertisementLocation.customadvertisementlocation')),
             ],
         ),
     ]

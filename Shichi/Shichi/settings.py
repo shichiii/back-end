@@ -85,12 +85,11 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'drf_yasg',
     'CustomAdvertisement',
-    'CustomAdvertisementLocation',
     'CustomCarImage',
     'CustomHistories',
     'CustomUser',
     'Chat',
-    # 'azbankgateways',
+    'azbankgateways',
     'channels'
 ]
 
@@ -258,32 +257,32 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# AZ_IRANIAN_BANK_GATEWAYS = {
-#    'GATEWAYS': {
-#     #    'ZARINPAL': {
-#     #        'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
-#     #        'SANDBOX': 0,  # 0 disable, 1 active
-#     #    },
-#        'IDPAY': {
-#            'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
-#            'METHOD': 'POST',
-#            'X_SANDBOX': 1,  # 0 disable, 1 active
-#        },
-#     #    'BAHAMTA': {
-#     #        'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
-#     #    },
-#    },
-#    'IS_SAMPLE_FORM_ENABLE': True, # اختیاری و پیش فرض غیر فعال است
-#    'DEFAULT': 'IDPAY',
-#    'CURRENCY': 'IRR', # اختیاری
-#    'TRACKING_CODE_QUERY_PARAM': 'tc', # اختیاری
-#    'TRACKING_CODE_LENGTH': 16, # اختیاری
-#    'SETTING_VALUE_READER_CLASS': 'azbankgateways.readers.DefaultReader', # اختیاری
-#    'BANK_PRIORITIES': [
-#    ],
-#    'IS_SAFE_GET_GATEWAY_PAYMENT': False, #اختیاری، بهتر است True بزارید.
-#    'CUSTOM_APP': None, # اختیاری 
-# }
+AZ_IRANIAN_BANK_GATEWAYS = {
+   'GATEWAYS': {
+    #    'ZARINPAL': {
+    #        'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
+    #        'SANDBOX': 0,  # 0 disable, 1 active
+    #    },
+       'IDPAY': {
+           'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
+           'METHOD': 'POST',
+           'X_SANDBOX': 1,  # 0 disable, 1 active
+       },
+    #    'BAHAMTA': {
+    #        'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
+    #    },
+   },
+   'IS_SAMPLE_FORM_ENABLE': True, # اختیاری و پیش فرض غیر فعال است
+   'DEFAULT': 'IDPAY',
+   'CURRENCY': 'IRR', # اختیاری
+   'TRACKING_CODE_QUERY_PARAM': 'tc', # اختیاری
+   'TRACKING_CODE_LENGTH': 16, # اختیاری
+   'SETTING_VALUE_READER_CLASS': 'azbankgateways.readers.DefaultReader', # اختیاری
+   'BANK_PRIORITIES': [
+   ],
+   'IS_SAFE_GET_GATEWAY_PAYMENT': False, #اختیاری، بهتر است True بزارید.
+   'CUSTOM_APP': None, # اختیاری 
+}
 
 
 USE_X_FORWARDED_HOST = True

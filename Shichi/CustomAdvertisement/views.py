@@ -1,11 +1,10 @@
 from django.shortcuts import render
-from rest_framework import generics, viewsets, filters
+from rest_framework import generics, viewsets, filters, views
 from .models import CustomAdvertisement, Comment, Rate
 from .serializers import customAdvertisementCreateSerializer, customAdvertisementSerializer, CommentSerializer, RateSerializer
 from rest_framework import generics, viewsets, filters, status
 from rest_framework.response import Response
 from CustomUser.models import CustomUser
-from CustomAdvertisementLocation.models import CustomAdvertisementLocation
 
 class customAdvertisementShowView(generics.RetrieveAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -71,8 +70,7 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
             queryset = queryset.filter(end_date__icontains=end_date_input)
             
         if state_input:
-            location = CustomAdvertisementLocation.objects.get(state = state_input)
-            queryset = queryset.filter(location__icontains = location.pk)
+            queryset = queryset.filter(location_state__icontains=state_input)
 
         queryset = queryset.filter(price__range=(lower_price_input, upper_price_input))
         return queryset
@@ -111,3 +109,22 @@ class RateUpdateView(generics.UpdateAPIView):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
 
+
+class PayForAdvertisement(views.APIView):
+    def get(self, request, id):
+        advertisement = CustomAdvertisement.objects.get(id=id)
+        if advertisement is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        email = request.user
+        user = CustomUser.objects.get(email=email)
+        user_wealth = user.wallet
+        cost = advertisement.price
+        if user_wealth < cost:
+            return Response("Not enough money", status=status.HTTP_406_NOT_ACCEPTABLE)
+        else:
+            user.wallet -= cost
+            owner = CustomUser.objects.get(id = advertisement.owner_id)
+            owner.wallet += cost
+            user.save()
+            owner.save()
+            return Response("Successfull", status=status.HTTP_200_OK)

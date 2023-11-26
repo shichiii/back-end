@@ -1,9 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
-from .models import CustomUser, Wallet
-from .serializers import CustomUserSerializer, LoginSignupCustomUserSerializer, UpdateCustomUserSerializer
-from .serializers import WalletSerializer
+from .models import CustomUser
+from .serializers import SetPasswordResetSerializer, UpdateCustomUserWalletSerializer, CustomUserSerializer, LoginSignupCustomUserSerializer, UpdateCustomUserSerializer
 from django.contrib.auth.hashers import make_password, check_password
 
 # Create your views here.
@@ -77,6 +76,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail  # Import send_mail for sending the email.
 
 class PasswordResetView(APIView):
+    serializer_class = PasswordResetSerializer
+    
     def post(self, request):
         serializer = PasswordResetSerializer(data=request.data)
 
@@ -91,8 +92,8 @@ class PasswordResetView(APIView):
             current_site = get_current_site(request)
 
             uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-            reset_url = f"http://{current_site.domain}/user/password-reset-confirm/{uidb64}/{token}/"
-
+            # reset_url = f"http://{current_site.domain}/user/password-reset-confirm/{uidb64}/{token}/"
+            reset_url = f"Localhost:3000/reset/{token}/"
             print(f"Reset URL: {reset_url}")
 
             subject = "Password Reset Request"
@@ -111,8 +112,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-
+from Payments.views import go_to_gateway_view
 class PasswordResetConfirmView(APIView):
+    serializer_class = SetPasswordResetSerializer
     def post(self, request, uidb64, token):
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
@@ -120,7 +122,7 @@ class PasswordResetConfirmView(APIView):
             if default_token_generator.check_token(user, token):
                 # valid; allow the user to reset the password
                 new_password = request.data.get('new_password')
-                user.set_password(new_password)
+                user.password = make_password(new_password)
                 user.save()
                 return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)
             else:
@@ -128,68 +130,21 @@ class PasswordResetConfirmView(APIView):
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
             return Response({'error': 'Invalid user ID.'}, status=status.HTTP_400_BAD_REQUEST)
  
-
-class WalletListView(generics.ListAPIView):
-    queryset = Wallet.objects.all()
-    serializer_class = WalletSerializer
-
-class WalletCreateView(generics.CreateAPIView):
-    queryset = Wallet.objects.all()
-    serializer_class = WalletSerializer
-
-class WalletUpdateView(generics.UpdateAPIView):
-    queryset = Wallet.objects.all()
-    serializer_class = WalletSerializer
-
-class WalletDeleteView(generics.DestroyAPIView):
-    queryset = Wallet.objects.all()
-    serializer_class = WalletSerializer
     
-    
-# import logging
-# from django.urls import reverse
-# # from azbankgateways import bankfactories, models as bank_models, default_settings as settings
-# # from azbankgateways.exceptions import AZBankGatewaysException
-# from django.http import HttpResponse, Http404
-
-
-# # def go_to_gateway_view(request):
-# #     amount = 10000
-# #     # تنظیم شماره موبایل کاربر از هر جایی که مد نظر است
-# #     user_mobile_number = '+989112521234'  # اختیاری
-# #     factory = bankfactories.BankFactory()
-# #     try:
-# #         # bank = factory.auto_create() # or 
-# #         bank = factory.create(bank_models.BankType.IDPAY) 
-# #         bank.set_request(request)
-# #         bank.set_amount(amount)
-# #         bank.set_client_callback_url('callback-gateway/')  # reverse...
-# #         bank.set_mobile_number(user_mobile_number)  # اختیاری
-# #         bank_record = bank.ready()
-# #         return bank.redirect_gateway()
-#     # except AZBankGatewaysException as e:
-#     #     logging.critical(e)
-#     #     # TODO: redirect to failed page.
-#     #     raise e
-
-
-# def callback_gateway_view(request):
-#     tracking_code = request.GET.get(settings.TRACKING_CODE_QUERY_PARAM, None)
-#     if not tracking_code:
-#         logging.debug("این لینک معتبر نیست.")
-#         raise Http404
-
-#     try:
-#         bank_record = bank_models.Bank.objects.get(tracking_code=tracking_code)
-#     except bank_models.Bank.DoesNotExist:
-#         logging.debug("این لینک معتبر نیست.")
-#         raise Http404
-
-#     # در این قسمت باید از طریق داده هایی که در بانک رکورد وجود دارد، رکورد متناظر یا هر اقدام مقتضی دیگر را انجام دهیم
-#     if bank_record.is_success:
-#         # پرداخت با موفقیت انجام پذیرفته است و بانک تایید کرده است.
-#         # می توانید کاربر را به صفحه نتیجه هدایت کنید یا نتیجه را نمایش دهید.
-#         return HttpResponse("پرداخت با موفقیت انجام شد.")
-
-#     # پرداخت موفق نبوده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.
-#     return HttpResponse("پرداخت با شکست مواجه شده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.")
+class RequestForWallet(APIView):
+    serializer_class = UpdateCustomUserWalletSerializer
+    def post(self, request):
+        email = request.user
+        user = CustomUser.objects.get(email=email)
+        if user is not None:
+            ser = UpdateCustomUserWalletSerializer(data=self.request.data)
+            if ser.is_valid():
+                wallet = ser.validated_data['wallet']
+                res = go_to_gateway_view(self.request, user.email, wallet)
+                return Response(str(res.url), status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+            
+            

@@ -45,8 +45,8 @@ urlpatterns = [
         name='schema-redoc'),
     path('user/', include('CustomUser.urls')),
     path('advertisement/', include('CustomAdvertisement.urls')),
-    path('location/', include('CustomAdvertisementLocation.urls')),
     path('carimage/', include('CustomCarImage.urls')),
     path('history/', include('CustomHistories.urls')),
     path('chat/', include('Chat.urls')),
+    path('payments/', include('Payments.urls')),
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
