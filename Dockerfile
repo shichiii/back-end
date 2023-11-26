@@ -21,9 +21,9 @@ RUN pip install gunicorn
 COPY ./Shichi .
 
 # migrate and run
-COPY ./entrypoint.sh /
+COPY ./entrypoint.sh .
 
 # Make the script executable
-RUN chmod +x /entrypoint.sh
+RUN chmod +x entrypoint.sh
 
-ENTRYPOINT ["sh", "/entrypoint.sh"]
+ENTRYPOINT ["sh", "entrypoint.sh"]
