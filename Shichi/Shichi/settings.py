@@ -13,7 +13,7 @@ from datetime import timedelta
 from pathlib import Path
 from environs import Env
 import os
-
+import channels.middleware
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -88,12 +88,14 @@ INSTALLED_APPS = [
     'CustomCarImage',
     'CustomHistories',
     'CustomUser',
+    'Chat',
     'azbankgateways',
-    'Payments',
+    'channels'
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    # 'channels.middleware.WebSocketMiddleware'
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -110,10 +112,12 @@ SWAGGER_SETTINGS = {
 }
 ROOT_URLCONF = 'Shichi.urls'
 
+ASGI_APPLICATION = 'Shichi.asgi.application'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR , 'Shichi/')],
+        'DIRS': [os.path.join(BASE_DIR , 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -255,18 +259,21 @@ AUTHENTICATION_BACKENDS = [
 
 AZ_IRANIAN_BANK_GATEWAYS = {
    'GATEWAYS': {
-       'ZARINPAL': {
-           'MERCHANT_CODE': '866f5a02-98db-42b4-a0e8-6cd0cc69ced2',
-           'SANDBOX': 1,  # 0 disable, 1 active
-       },
-    #    'IDPAY': {
+    #    'ZARINPAL': {
     #        'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
-    #        'METHOD': 'POST',
-    #        'X_SANDBOX': 0,  # 0 disable, 1 active
+    #        'SANDBOX': 0,  # 0 disable, 1 active
+    #    },
+       'IDPAY': {
+           'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
+           'METHOD': 'POST',
+           'X_SANDBOX': 1,  # 0 disable, 1 active
+       },
+    #    'BAHAMTA': {
+    #        'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
     #    },
    },
    'IS_SAMPLE_FORM_ENABLE': True, # اختیاری و پیش فرض غیر فعال است
-   'DEFAULT': 'ZARINPAL',
+   'DEFAULT': 'IDPAY',
    'CURRENCY': 'IRR', # اختیاری
    'TRACKING_CODE_QUERY_PARAM': 'tc', # اختیاری
    'TRACKING_CODE_LENGTH': 16, # اختیاری
@@ -280,3 +287,13 @@ AZ_IRANIAN_BANK_GATEWAYS = {
 
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            # Use your Redis server's address here
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
