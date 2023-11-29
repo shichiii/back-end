@@ -13,3 +13,7 @@ def advertisement_list_view_url():
 @pytest.fixture
 def advertisement_detail_view_url():
     return reverse('advertisement_show')
+
+@pytest.fixture
+def advertisement_create_view_url():
+    return reverse('advertisement_create')
