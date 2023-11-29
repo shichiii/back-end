@@ -2,6 +2,7 @@ import pytest
 from rest_framework import status
 from model_bakery import baker
 from CustomAdvertisement.models import CustomAdvertisement
+from CustomUser.models import CustomUser
 
 @pytest.mark.django_db
 class TestCustomAdvertisementViewSet:
@@ -58,3 +59,18 @@ class TestCustomAdvertisementShowView:
     def test_get_request_nonexistent_object_returns_404(self, api_client, advertisement_detail_view_url):
         response = api_client.get(advertisement_detail_view_url)
         assert response.status_code == status.HTTP_404_NOT_FOUND
+        
+@pytest.mark.django_db
+class TestCustomAdvertisementCreateView:
+
+    def test_post_request_creates_object(self, api_client, advertisement_create_view_url):
+        user = baker.make(CustomUser)  
+        api_client.force_authenticate(user=user)
+
+        data = {
+            "owner_id": user.pk        
+        }
+
+        response = api_client.post(advertisement_create_view_url, data=data)
+        assert response.status_code == status.HTTP_201_CREATED
+        assert CustomAdvertisement.objects.count() == 1
