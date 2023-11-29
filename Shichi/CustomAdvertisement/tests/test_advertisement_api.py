@@ -25,3 +25,10 @@ class TestCustomAdvertisementViewSet:
     def test_if_delete_request_is_status_405(self, api_client, advertisement_list_view_url):
         response = api_client.delete(advertisement_list_view_url)
         assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+        
+    def test_get_request_returns_objects(self, api_client, advertisement_list_view_url):
+        baker.make(CustomAdvertisement, _quantity=3)
+        
+        response = api_client.get(advertisement_list_view_url)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 3 
