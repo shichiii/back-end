@@ -9,3 +9,7 @@ def api_client():
 @pytest.fixture
 def advertisement_list_view_url():
     return reverse('advertisement_list')
+
+@pytest.fixture
+def advertisement_detail_view_url():
+    return reverse('advertisement_show')
