@@ -236,8 +236,6 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -254,31 +252,22 @@ AUTHENTICATION_BACKENDS = [
 
 AZ_IRANIAN_BANK_GATEWAYS = {
    'GATEWAYS': {
-    #    'ZARINPAL': {
-    #        'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
-    #        'SANDBOX': 0,  # 0 disable, 1 active
-    #    },
-       'IDPAY': {
-           'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
-           'METHOD': 'POST',
-           'X_SANDBOX': 1,  # 0 disable, 1 active
+       'ZARINPAL': {
+           'MERCHANT_CODE': '866f5a02-98db-42b4-a0e8-6cd0cc69ced2',
+           'SANDBOX': 1,  # 0 disable, 1 active
        },
-    #    'BAHAMTA': {
-    #        'MERCHANT_CODE': '<YOUR MERCHANT CODE>',
-    #    },
    },
-   'IS_SAMPLE_FORM_ENABLE': True, # اختیاری و پیش فرض غیر فعال است
-   'DEFAULT': 'IDPAY',
-   'CURRENCY': 'IRR', # اختیاری
-   'TRACKING_CODE_QUERY_PARAM': 'tc', # اختیاری
-   'TRACKING_CODE_LENGTH': 16, # اختیاری
-   'SETTING_VALUE_READER_CLASS': 'azbankgateways.readers.DefaultReader', # اختیاری
+   'IS_SAMPLE_FORM_ENABLE': True,
+   'DEFAULT': 'ZARINPAL',
+   'CURRENCY': 'IRR',
+   'TRACKING_CODE_QUERY_PARAM': 'tc',
+   'TRACKING_CODE_LENGTH': 16,
+   'SETTING_VALUE_READER_CLASS': 'azbankgateways.readers.DefaultReader',
    'BANK_PRIORITIES': [
    ],
-   'IS_SAFE_GET_GATEWAY_PAYMENT': False, #اختیاری، بهتر است True بزارید.
-   'CUSTOM_APP': None, # اختیاری 
+   'IS_SAFE_GET_GATEWAY_PAYMENT': False,
+   'CUSTOM_APP': None, 
 }
-
 
 REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
 USE_X_FORWARDED_HOST = True
@@ -296,7 +285,6 @@ CHANNEL_LAYERS = {
 
 # cache requested url for each user for 2 minutes
 CACHE_TTL = 2*60
-
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
