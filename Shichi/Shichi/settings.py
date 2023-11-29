@@ -90,7 +90,8 @@ INSTALLED_APPS = [
     'CustomUser',
     'Chat',
     'azbankgateways',
-    'channels'
+    'channels',
+    'Payments'
 ]
 
 MIDDLEWARE = [
@@ -285,6 +286,7 @@ AZ_IRANIAN_BANK_GATEWAYS = {
 }
 
 
+REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -292,8 +294,24 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            # Use your Redis server's address here
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [( REDIS_HOST, 6379)],
         },
     },
+}
+
+
+# cache requested url for each user for 2 minutes
+CACHE_TTL = 2*60
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
 }

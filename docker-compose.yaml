@@ -5,7 +5,7 @@ services:
     build: 
       context: .
     container_name: shichi_web
-    command: gunicorn Shichi.wsgi:application --bind 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - app_media:/usr/src/app/media/
       - static:/static
@@ -34,16 +34,16 @@ services:
       - REDIS_REPLICATION_MODE=master
     volumes:
       - redis:/bitnami/redis/data
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-    depends_on:
-      - web
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - static:/static
-      - app_media:/usr/src/app/media/
+  # nginx:
+  #   image: nginx:latest
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - web
+  #   volumes:
+  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+  #     - static:/static
+  #     - app_media:/usr/src/app/media/
 
 volumes:
   redis:
