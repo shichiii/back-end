@@ -13,8 +13,7 @@ from rest_framework import generics, permissions, viewsets, status
 
 # Create your views here.
 def go_to_gateway_view(request, email, amount=50000):
-    # تنظیم شماره موبایل کاربر از هر جایی که مد نظر است
-    user_mobile_number = '+989112521234'  # اختیاری
+    user_mobile_number = '+989112521234' 
     factory = bankfactories.BankFactory()
     try:
         # bank = factory.auto_create() # or 
@@ -30,7 +29,6 @@ def go_to_gateway_view(request, email, amount=50000):
         return bank.redirect_gateway()
     except AZBankGatewaysException as e:
         logging.critical(e)
-        # TODO: redirect to failed page.
         raise e
 
 
@@ -45,11 +43,7 @@ def callback_gateway_view(request):
     except bank_models.Bank.DoesNotExist:
         logging.debug("این لینک معتبر نیست.")
         raise Http404
-
-    # در این قسمت باید از طریق داده هایی که در بانک رکورد وجود دارد، رکورد متناظر یا هر اقدام مقتضی دیگر را انجام دهیم
     if bank_record.is_success:
-        # پرداخت با موفقیت انجام پذیرفته است و بانک تایید کرده است.
-        # می توانید کاربر را به صفحه نتیجه هدایت کنید یا نتیجه را نمایش دهید.
         payment = PaymentLog.objects.get(bank_code = tracking_code)
         payment.was_successful = True
         payment.save()
@@ -61,8 +55,6 @@ def callback_gateway_view(request):
             payment.save()
         return HttpResponse("Successfull")
         
-
-    # پرداخت موفق نبوده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.
     return HttpResponse("پرداخت با شکست مواجه شده است. اگر پول کم شده است ظرف مدت ۴۸ ساعت پول به حساب شما بازخواهد گشت.")
 
 class PaymentViewSet(viewsets.ModelViewSet):
