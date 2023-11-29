@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from CustomUser.models import CustomUser
 from CustomAdvertisementLocation.models import CustomAdvertisementLocation
 
+
 class customAdvertisementShowView(generics.RetrieveAPIView):
     queryset = CustomAdvertisement.objects.all()
     serializer_class = customAdvertisementSerializer
@@ -110,4 +111,23 @@ class RateDeleteView(generics.DestroyAPIView):
 class RateUpdateView(generics.UpdateAPIView):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
+from rest_framework.views import APIView
 
+class PayForAdvertisement(APIView):
+    def get(self, request, id):
+        advertisement = CustomAdvertisement.objects.get(id=id)
+        if advertisement is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        email = request.user
+        user = CustomUser.objects.get(email=email)
+        user_wealth = user.wallet
+        cost = advertisement.price
+        if user_wealth < cost:
+            return Response("Not enough money", status=status.HTTP_406_NOT_ACCEPTABLE)
+        else:
+            user.wallet -= cost
+            owner = CustomUser.objects.get(id = advertisement.owner_id)
+            owner.wallet += cost
+            user.save()
+            owner.save()
+            return Response("Successfull", status=status.HTTP_200_OK)
