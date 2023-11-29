@@ -26,4 +26,6 @@ COPY ./entrypoint.sh .
 # Make the script executable
 RUN chmod +x entrypoint.sh
 
-ENTRYPOINT ["sh", "entrypoint.sh"]
+RUN sed -i 's/\r//g' entrypoint.sh
+
+ENTRYPOINT ["bash", "entrypoint.sh"]
