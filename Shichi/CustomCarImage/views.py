@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics , parsers
 from .models import CustomCarImage
-from .serializers import CustomCarImageSerializer
+from .serializers import CustomCarImageSerializer, CustomCarImageCreateSerializer
 from drf_yasg.utils import swagger_auto_schema
 
 class CustomCarImageShowView(generics.RetrieveAPIView):
@@ -16,8 +16,8 @@ class CustomCarImageListView(generics.ListAPIView):
 class CustomCarImageCreateView(generics.CreateAPIView):
     parser_classes = (parsers.MultiPartParser,)
     queryset = CustomCarImage.objects.all()
-    serializer_class = CustomCarImageSerializer
-    @swagger_auto_schema(request_body=CustomCarImageSerializer ,operation_description='Upload file...',)
+    serializer_class = CustomCarImageCreateSerializer
+    @swagger_auto_schema(request_body=CustomCarImageCreateSerializer ,operation_description='Upload file...',)
     def post(self, request, *args, **kwargs):
         """
         Upload a custom car image.
