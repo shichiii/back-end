@@ -8,7 +8,7 @@ from rest_framework import status
 
 
 def chat_room(request, room_id):
-    return render(request, 'chat/chat.html')
+    return render(request, 'chat/chat.html') 
 
 class ModelViewSetChatRoom(viewsets.ModelViewSet):
     queryset = ChatRoom.objects.all()
