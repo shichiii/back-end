@@ -50,6 +50,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         
         if await self.allowd() == False:
             return DenyConnection
+        if await self.premission() == False :
+            return DenyConnection
         # breakpoint() 
         # Join room group
         await self.channel_layer.group_add(
@@ -106,5 +108,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def allowd(self):
         does_room_exists = ChatRoom.objects.filter(id=self.room_id).exists()
         if not does_room_exists:
+            return False
+        return True
+    
+    @sync_to_async
+    def premission(self):
+        if ChatRoom.objects.filter(sender=self.scope['user']).exists() == False or ChatRoom.objects.filter(reciver=self.scope['user']).exists() == False:
             return False
         return True
