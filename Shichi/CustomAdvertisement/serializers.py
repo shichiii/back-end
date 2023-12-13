@@ -12,8 +12,8 @@ class customAdvertisementCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'owner_id', 'available_date_list']
         
     def create(self, validated_data):
-        start_date = validated_data.pop('start_date')
-        end_date = validated_data.pop('end_date')
+        start_date = validated_data['start_date']
+        end_date = validated_data['end_date']
 
         instance = super().create(validated_data)
 
