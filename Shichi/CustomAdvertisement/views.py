@@ -19,12 +19,7 @@ class customAdvertisementCreateView(generics.CreateAPIView):
     queryset = CustomAdvertisement.objects.all()
     serializer_class = customAdvertisementCreateSerializer
     
-    def perform_create(self, serializer):
-        start_date = serializer.validated_data['start_date']
-        end_date = serializer.validated_data['end_date']
-        available_date_list = serializer.generate_date_range(start_date, end_date)
-        serializer.save(available_date_list=available_date_list)
-        
+    def perform_create(self, serializer):       
         user = self.request.user       
         serializer.save(owner_id=user.pk)
 
