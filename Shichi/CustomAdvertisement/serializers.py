@@ -2,12 +2,23 @@ from rest_framework import serializers
 from .models import CustomAdvertisement, Comment, Rate
 from CustomCarImage.serializers import CustomCarImageSerializer
 from django.db.models import Avg
+from datetime import timedelta, date
 
 class customAdvertisementCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomAdvertisement
-        fields = ['id', 'owner_id', 'start_date', 'end_date', 'price', 'description', 'car_images', 'car_name', 'car_color', 'car_produced_date','car_seat_count','car_door_count', 'car_Is_cooler', 'car_gearbox', 'car_fuel', 'car_category', 'location_state', 'location_geo_width', 'location_geo_length']
+        fields = ['id', 'owner_id', 'start_date', 'end_date', 'available_date_list', 'price', 'description', 'car_images', 'car_name', 'car_color', 'car_produced_date','car_seat_count','car_door_count', 'car_Is_cooler', 'car_gearbox', 'car_fuel', 'car_category', 'location_state', 'location_geo_width', 'location_geo_length']
         read_only_fields = ['id', 'owner_id', 'created_date']
+        
+    def generate_date_range(self, start_date, end_date):
+        available_date_list = []
+        current_date = start_date
+
+        while current_date <= end_date:
+            available_date_list.append(current_date)
+            current_date += timedelta(days=1)
+
+        return available_date_list
 
 
 class customAdvertisementSerializer(serializers.ModelSerializer):
