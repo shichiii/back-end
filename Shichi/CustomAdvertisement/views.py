@@ -19,11 +19,8 @@ class customAdvertisementCreateView(generics.CreateAPIView):
     queryset = CustomAdvertisement.objects.all()
     serializer_class = customAdvertisementCreateSerializer
     
-    def perform_create(self, serializer):
-        user = self.request.user
-        # user = CustomUser.objects.get(id=user.id)
-        # if user is None:
-        #     return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+    def perform_create(self, serializer):       
+        user = self.request.user       
         serializer.save(owner_id=user.pk)
 
 class customAdvertisementDeleteView(generics.DestroyAPIView):

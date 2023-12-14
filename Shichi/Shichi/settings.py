@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     'CustomAdvertisement',
     'CustomCarImage',
     'CustomHistories',
+    'CustomDate',
     'CustomUser',
     'Chat',
     'azbankgateways',

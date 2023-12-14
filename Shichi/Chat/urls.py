@@ -14,13 +14,14 @@ app_name = 'chat'
 router_chatroom = DefaultRouter()
 router_chatroom.register(r'chatroom', ModelViewSetChatRoom)
 
-router_message = DefaultRouter()
-router_message.register(r'Messages', ModelViewSetMessage)
+# router_message = DefaultRouter()
+# router_message.register(r'Messages', ModelViewSetMessage , basename='message')
 
 urlpatterns = [
     path('room/<int:room_id>/', chat_room, name='chat_room'),
     path('chatroom/', include(router_chatroom.urls)),
-    path('messsage/', include(router_message.urls)),
+    path('messages/<int:room_id>/', ModelViewSetMessage.as_view(), name='message-list'),
+    path('chatroomMembers/',PersonChatRoomsAPIView.as_view() , name = 'my_rooms' )
 ]
 
 # Include the WebSocket URL patterns
