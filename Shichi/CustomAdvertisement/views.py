@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from CustomUser.models import CustomUser
 from CustomDate.models import CustomDate
 from CustomDate.views import CustomDateDeleteView
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 class customAdvertisementShowView(generics.RetrieveAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -37,6 +37,8 @@ class customAdvertisementCreateView(generics.CreateAPIView):
         id = serializer.data['id']
         start_date = serializer.data['start_date']
         end_date = serializer.data['end_date']
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+        end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
         
         available_date_list=[]
         date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
