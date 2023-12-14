@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets , views
 from .models import ChatRoom , Message
+from CustomUser.models import CustomUser
 from CustomAdvertisement.models import CustomAdvertisement
 from .serializers import ChatRoomSerializers , MessageSerializers
 from rest_framework.response import Response
@@ -26,3 +27,13 @@ class ModelViewSetMessage(views.APIView):
 
         serializer = MessageSerializers(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class PersonChatRoomsAPIView(views.APIView):
+    def get(self, request):
+        try:
+            # breakpoint()
+            chat_rooms = ChatRoom.objects.filter(sender=request.user.id) | ChatRoom.objects.filter(reciver=request.user.id)
+            serializer = ChatRoomSerializers(chat_rooms, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "Person not found"}, status=status.HTTP_404_NOT_FOUND)

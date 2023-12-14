@@ -3,6 +3,8 @@ from CustomUser.models import CustomUser
 
 class ChatRoom(models.Model):
     name = models.CharField(max_length=100)
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE , related_name='sent_messages')
+    reciver = models.ForeignKey(CustomUser, on_delete=models.CASCADE , related_name='received_messages')
 
     def __str__(self):
         return self.name
