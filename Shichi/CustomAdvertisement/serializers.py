@@ -9,21 +9,7 @@ class customAdvertisementCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomAdvertisement
         fields = ['id', 'owner_id', 'start_date', 'end_date', 'available_date_list', 'price', 'description', 'car_images', 'car_name', 'car_color', 'car_produced_date','car_seat_count','car_door_count', 'car_Is_cooler', 'car_gearbox', 'car_fuel', 'car_category', 'location_state', 'location_geo_width', 'location_geo_length']
-        read_only_fields = ['id', 'owner_id', 'available_date_list']
-        
-    def create(self, validated_data):
-        start_date = validated_data['start_date']
-        end_date = validated_data['end_date']
-
-        instance = super().create(validated_data)
-
-        date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
-        for date in date_range:
-            custom_date = CustomDate.objects.create(date=date, adv_id=self._readable_fields['id'])
-            instance.available_date_list.add(custom_date)
-
-        return instance
-    
+        read_only_fields = ['id', 'owner_id', 'available_date_list']  
 
 class customAdvertisementSerializer(serializers.ModelSerializer):
     car_images = CustomCarImageSerializer(read_only=True, many=True)

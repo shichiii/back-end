@@ -18,14 +18,6 @@ class customAdvertisementViewSet(viewsets.ModelViewSet):
     queryset = CustomAdvertisement.objects.all()
     serializer_class = customAdvertisementSerializer
 
-class customAdvertisementCreateView(generics.CreateAPIView):
-    queryset = CustomAdvertisement.objects.all()
-    serializer_class = customAdvertisementCreateSerializer
-    
-    def perform_create(self, serializer):       
-        user = self.request.user       
-        serializer.save(owner_id=user.pk)
-
 class customAdvertisementDeleteView(generics.DestroyAPIView):
     queryset = CustomAdvertisement.objects.all()
     serializer_class = customAdvertisementSerializer
@@ -33,7 +25,28 @@ class customAdvertisementDeleteView(generics.DestroyAPIView):
 class customAdvertisementUpdateView(generics.UpdateAPIView):
     queryset = CustomAdvertisement.objects.all()
     serializer_class = customAdvertisementCreateSerializer
+    
+    def create(self, id, serializer, validated_data):
+        start_date = validated_data['start_date']
+        end_date = validated_data['end_date']
 
+        available_date_list=[]
+
+        date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+        for date in date_range:
+            custom_date = CustomDate.objects.create(date=date, adv_id=id)
+            available_date_list.add(custom_date)
+
+        serializer.save(available_date_list=available_date_list)
+
+class customAdvertisementCreateView(generics.CreateAPIView):
+    queryset = CustomAdvertisement.objects.all()
+    serializer_class = customAdvertisementCreateSerializer
+    customAdvertisementUpdateView()
+    
+    def perform_create(self, serializer):       
+        user = self.request.user       
+        serializer.save(owner_id=user.pk)
     
 class customAdvertisementSearchView(generics.ListAPIView):
     queryset = CustomAdvertisement.objects.all()
