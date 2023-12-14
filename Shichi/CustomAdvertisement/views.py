@@ -44,10 +44,9 @@ class customAdvertisementCreateView(generics.CreateAPIView):
         date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
         for date in date_range:
             custom_date = CustomDate.objects.create(date=date, adv_id=id)
-            available_date_list.append(custom_date)
+            available_date_list.append(custom_date.pk)
 
-        instance = CustomAdvertisement.objects.get(id=id)
-        instance.available_date_list.set(available_date_list)
+        serializer.save(available_date_list=available_date_list)
     
 class customAdvertisementSearchView(generics.ListAPIView):
     queryset = CustomAdvertisement.objects.all()
