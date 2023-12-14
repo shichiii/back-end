@@ -5,6 +5,9 @@ from .serializers import customAdvertisementCreateSerializer, customAdvertisemen
 from rest_framework import generics, viewsets, filters, status
 from rest_framework.response import Response
 from CustomUser.models import CustomUser
+from CustomDate.models import CustomDate
+from CustomDate.views import CustomDateDeleteView
+from datetime import timedelta
 
 class customAdvertisementShowView(generics.RetrieveAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -21,7 +24,7 @@ class customAdvertisementCreateView(generics.CreateAPIView):
     
     def perform_create(self, serializer):       
         user = self.request.user       
-        serializer.save(owner_id=user.pk)
+        serializer.save(owner_id=14)
 
 class customAdvertisementDeleteView(generics.DestroyAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -108,7 +111,7 @@ class RateUpdateView(generics.UpdateAPIView):
 
 
 class PayForAdvertisement(views.APIView):
-    def get(self, request, id):
+    def get(self, request, id, start_date, end_date):
         advertisement = CustomAdvertisement.objects.get(id=id)
         if advertisement is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -119,9 +122,22 @@ class PayForAdvertisement(views.APIView):
         if user_wealth < cost:
             return Response("Not enough money", status=status.HTTP_406_NOT_ACCEPTABLE)
         else:
+            date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+            for date in date_range:
+                custom_date = CustomDate.objects.get(date=date, adv_id=id)
+                if custom_date is None:
+                    return Response(f"The car is not available on {date}", status=status.HTTP_403_FORBIDDEN)
+            
+            for date in date_range:
+                custom_date = CustomDate.objects.get(date=date, adv_id=id)
+                advertisement.available_date_list.remove(custom_date.pk)
+                advertisement.save()
+                CustomDateDeleteView()
+            
             user.wallet -= cost
             owner = CustomUser.objects.get(id = advertisement.owner_id)
             owner.wallet += cost
             user.save()
             owner.save()
+            
             return Response("Successfull", status=status.HTTP_200_OK)

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import CustomAdvertisement, Comment, Rate
 from CustomCarImage.serializers import CustomCarImageSerializer
-from CustomDate.views import CustomDate
+from CustomDate.models import CustomDate
 from django.db.models import Avg
 from datetime import timedelta
 
@@ -19,7 +19,7 @@ class customAdvertisementCreateSerializer(serializers.ModelSerializer):
 
         date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
         for date in date_range:
-            custom_date = CustomDate.objects.create(date=date)
+            custom_date = CustomDate.objects.create(date=date, adv_id=self._readable_fields['id'])
             instance.available_date_list.add(custom_date)
 
         return instance
