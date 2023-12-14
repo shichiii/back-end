@@ -13,17 +13,18 @@ from rest_framework_simplejwt.tokens import AccessToken
 class TokenAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         # Get the query string from the scope
-        query_string = scope.get("headers", b"")
+        query_string = scope.get("query_string", b"")
+
+        # Decode the query string
+        query_string = query_string.decode('utf-8')
 
         # Parse the query string to get the token
         token_param = None
-        for name, value in query_string:
-            if name == b'authorization':
-                # Check if the value starts with 'Bearer '
-                if value.startswith(b'Bearer '):
-                    # Extract the token (excluding 'Bearer ')
-                    token_param = value[len(b'Bearer '):].decode('utf-8')
-                    break
+        for param in query_string.split('&'):
+            name, value = param.split('=')
+            if name == 'access_token':  # Assuming the parameter name is 'access_token'
+                token_param = value
+                break
 
         if token_param:
             # Get the user from the token and set it in the scope
