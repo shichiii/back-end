@@ -24,7 +24,7 @@ class customAdvertisementCreateView(generics.CreateAPIView):
     
     def perform_create(self, serializer):       
         user = self.request.user       
-        serializer.save(owner_id=14)
+        serializer.save(owner_id=user.pk)
 
 class customAdvertisementDeleteView(generics.DestroyAPIView):
     queryset = CustomAdvertisement.objects.all()
