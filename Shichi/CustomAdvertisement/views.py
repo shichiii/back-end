@@ -46,7 +46,8 @@ class customAdvertisementCreateView(generics.CreateAPIView):
             custom_date = CustomDate.objects.create(date=date, adv_id=id)
             available_date_list.append(custom_date.pk)
 
-        serializer.save(available_date_list=available_date_list)
+        instance = CustomAdvertisement.objects.get(id=id)
+        instance.available_date_list.set(available_date_list)
     
 class customAdvertisementSearchView(generics.ListAPIView):
     queryset = CustomAdvertisement.objects.all()
