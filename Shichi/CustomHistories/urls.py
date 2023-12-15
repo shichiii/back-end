@@ -7,5 +7,5 @@ router.register(r'backdoor', CustomHistoriesViewSetBackdoor)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('customhistories', CustomHistoriesViewSet.as_view()),
+    path('customhistories', CustomHistoriesViewSet.as_view(), name = 'CustomHistories_list'),
 ]
