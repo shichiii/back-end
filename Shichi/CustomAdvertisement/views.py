@@ -145,9 +145,9 @@ class PayForAdvertisement(views.APIView):
             
             for date in date_range:
                 custom_date = CustomDate.objects.get(date=date, adv_id=id)
-                advertisement.available_date_list.remove(custom_date.pk)
-                advertisement.save()
-                CustomDateDeleteView()
+                advertisement.available_date_list.remove(custom_date)
+                custom_date.delete()
+            advertisement.save()
             
             user.wallet -= cost
             owner = CustomUser.objects.get(id = advertisement.owner_id)
