@@ -48,6 +48,7 @@ class customAdvertisementCreateView(generics.CreateAPIView):
 
         instance = CustomAdvertisement.objects.get(id=id)
         instance.available_date_list.set(available_date_list)
+        instance.save()
     
 class customAdvertisementSearchView(generics.ListAPIView):
     queryset = CustomAdvertisement.objects.all()
