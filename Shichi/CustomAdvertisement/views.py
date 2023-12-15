@@ -6,8 +6,8 @@ from rest_framework import generics, viewsets, filters, status
 from rest_framework.response import Response
 from CustomUser.models import CustomUser
 from CustomDate.models import CustomDate
-from CustomDate.views import CustomDateDeleteView
 from datetime import datetime, timedelta
+from django.db.models import Q
 
 class customAdvertisementShowView(generics.RetrieveAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -72,17 +72,30 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
         end_date_input = self.request.query_params.get('end_date', None)
         state_input = self.request.query_params.get('state', None)
         
+        
+        if start_date_input and not end_date_input:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+            end_date = start_date + timedelta(days=30)
+        elif not start_date_input and end_date_input:
+            start_date = datetime.now().date()
+            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+        elif start_date_input and end_date_input:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+            
+        if start_date_input or end_date_input:
+            queryset = queryset.filter(
+                Q(start_date__range=(start_date, end_date)) |
+                Q(end_date__range=(start_date, end_date)) |
+                Q(available_date_list__date__gte=start_date, available_date_list__date__lte=end_date)
+            )
+        
+        
         if car_category_input:
             queryset = queryset.filter(car_category__icontains=car_category_input)
 
         if car_color_input:
             queryset = queryset.filter(car_color__icontains=car_color_input)
-        
-        if start_date_input:
-            queryset = queryset.filter(start_date__icontains=start_date_input)
-            
-        if end_date_input:
-            queryset = queryset.filter(end_date__icontains=end_date_input)
             
         if state_input:
             queryset = queryset.filter(location_state__icontains=state_input)
@@ -137,7 +150,10 @@ class PayForAdvertisement(views.APIView):
         if user_wealth < cost:
             return Response("Not enough money", status=status.HTTP_406_NOT_ACCEPTABLE)
         else:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
             date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+            
             for date in date_range:
                 custom_date = CustomDate.objects.get(date=date, adv_id=id)
                 if custom_date is None:
