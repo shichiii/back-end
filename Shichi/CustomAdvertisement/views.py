@@ -49,6 +49,18 @@ class customAdvertisementCreateView(generics.CreateAPIView):
         instance = CustomAdvertisement.objects.get(id=id)
         instance.available_date_list.set(available_date_list)
         instance.save()
+        
+class customAdvertisementUserView(generics.ListAPIView):
+    queryset = CustomAdvertisement.objects.all()
+    serializer_class = customAdvertisementSerializer
+    filter_backends = [filters.OrderingFilter]
+    
+    def get_adv_user(self):
+        user = self.request.user
+        queryset = super().get_queryset()
+        queryset = queryset.filter(owner_id=user.pk)
+        
+        return queryset
     
 class customAdvertisementSearchView(generics.ListAPIView):
     queryset = CustomAdvertisement.objects.all()
