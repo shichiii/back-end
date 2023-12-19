@@ -147,13 +147,15 @@ class PayForAdvertisement(views.APIView):
         user = CustomUser.objects.get(email=email)
         user_wealth = user.wallet
         cost = advertisement.price
+        
+        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+        end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+        date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+        
+        cost = cost * len(date_range)     
         if user_wealth < cost:
             return Response("Not enough money", status=status.HTTP_406_NOT_ACCEPTABLE)
-        else:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
-            date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
-            
+        else:           
             for date in date_range:
                 custom_date = CustomDate.objects.get(date=date, adv_id=id)
                 if custom_date is None:
