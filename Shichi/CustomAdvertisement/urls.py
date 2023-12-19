@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import customAdvertisementShowView, customAdvertisementViewSet, customAdvertisementCreateView, customAdvertisementDeleteView,customAdvertisementUpdateView,customAdvertisementSearchView, CustomAdvertisementFilterView
+from .views import customAdvertisementShowView, customAdvertisementViewSet, customAdvertisementCreateView, customAdvertisementDeleteView,customAdvertisementUpdateView,customAdvertisementSearchView, CustomAdvertisementFilterView, customAdvertisementUserView
 from .views import CommentViewSet, CommentCreateView, CommentDeleteView, CommentUpdateView
 from .views import RateViewSet, RateCreateView, RateDeleteView, RateUpdateView, PayForAdvertisement
 urlpatterns = [
@@ -10,6 +10,7 @@ urlpatterns = [
     path('update/<int:pk>/', customAdvertisementUpdateView.as_view(), name='advertisement_update'),
     path('search/', customAdvertisementSearchView.as_view(), name='advertisement_search'),
     path('filter/', CustomAdvertisementFilterView.as_view(), name='advertisement_filter'),
+    path('myadvertisement/', customAdvertisementUserView.as_view(), name='advertisement_user'),
     
     path('list-comment/', CommentViewSet.as_view({'get': 'list'}), name = 'list-comment'),
     path('create-comment/', CommentCreateView.as_view(), name='create-comment'),
