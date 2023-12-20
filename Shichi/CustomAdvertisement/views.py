@@ -74,14 +74,14 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
         
         
         if start_date_input and not end_date_input:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+            start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
             end_date = start_date + timedelta(days=30)
         elif not start_date_input and end_date_input:
             start_date = datetime.now().date()
-            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+            end_date = datetime.strptime(end_date_input, "%Y-%m-%d").date()
         elif start_date_input and end_date_input:
-            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+            start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
+            end_date = datetime.strptime(end_date_input, "%Y-%m-%d").date()
             
         if start_date_input or end_date_input:
             queryset = queryset.filter(
@@ -139,7 +139,7 @@ class RateUpdateView(generics.UpdateAPIView):
 
 
 class PayForAdvertisement(views.APIView):
-    def get(self, request, id, start_date, end_date):
+    def get(self, request, id):
         advertisement = CustomAdvertisement.objects.get(id=id)
         if advertisement is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -148,8 +148,11 @@ class PayForAdvertisement(views.APIView):
         user_wealth = user.wallet
         cost = advertisement.price
         
-        start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-        end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+        start_date_input = self.request.query_params.get('start_date', None)
+        end_date_input = self.request.query_params.get('end_date', None)
+        
+        start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
+        end_date = datetime.strptime(end_date_input, "%Y-%m-%d").date()
         date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
         
         cost = cost * len(date_range)     
