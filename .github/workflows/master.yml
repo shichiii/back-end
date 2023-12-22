@@ -23,7 +23,7 @@ jobs:
           Host target
             HostName $SSH_HOST
             User $SSH_USER
-            Port 
+            Port 9011
             IdentityFile ~/.ssh/github
             LogLevel ERROR
             StrictHostKeyChecking no
