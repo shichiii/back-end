@@ -10,7 +10,7 @@ services:
       - app_media:/usr/src/app/media/
       - static:/static
     ports:
-      - 8000:8000
+      - 8000:8000 
     env_file:
       - ./Shichi/Shichi/.deploy.env
     depends_on:
