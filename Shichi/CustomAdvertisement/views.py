@@ -149,6 +149,51 @@ class RateUpdateView(generics.UpdateAPIView):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
 
+from django.http import HttpResponse
+
+# def is_rated(request, user_id, advert_id):
+#     rate_exists = Rate.objects.filter(user_id=user_id, adv=advert_id).exists()
+#     if rate_exists:
+#         # User has rated the advertisement
+#         return HttpResponse('User has rated the advertisement')
+#     else:
+#         # User has not rated the advertisement
+#         return HttpResponse('User has not rated the advertisement')
+
+from django.http import HttpResponse
+# from CustomUser.models import CustomUser
+# from .models import CustomAdvertisement
+
+# def is_rated(request, user_id, advert_id):
+
+#     user = CustomUser.objects.get(id=user_id)
+#     advert = CustomAdvertisement.objects.get(id=advert_id)
+
+#     try:
+#         rate = Rate.objects.get(user=user, adv=advert)
+#     except Rate.DoesNotExist:
+#         rate = None
+
+#     if rate:
+#         return HttpResponse('User has rated the advertisement')
+#     else:
+#         return HttpResponse('User has not rated the advertisement')
+from django.views import View
+
+class IsRatedView(View):
+    def get(self, request, user_id, advert_id):
+        user = CustomUser.objects.get(id=user_id)
+        advert = CustomAdvertisement.objects.get(id=advert_id)
+        response = None
+        try:
+            rate = Rate.objects.filter(user_id=user.id, adv=advert).exists()
+            response = HttpResponse(user.email+ ' has rated the advertisement by' + rate.rate)
+            response.status_code = 200
+        except:
+            response = HttpResponse('User has not rated the advertisement')
+            response.status_code = 400
+        
+        return response
 
 class PayForAdvertisement(views.APIView):
     def get(self, request, id):
