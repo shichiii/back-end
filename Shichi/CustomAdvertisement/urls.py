@@ -25,5 +25,5 @@ urlpatterns = [
     
     path('is-rated/<int:user_id>/<int:advert_id>/', IsRatedView.as_view(), name='is_rated'),
     
-    path('pay/<int:id>/', PayForAdvertisement.as_view(), name='pay'),
+    path('pay/', PayForAdvertisement.as_view(), name='pay'),
 ]

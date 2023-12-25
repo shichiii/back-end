@@ -148,38 +148,8 @@ class RateDeleteView(generics.DestroyAPIView):
 class RateUpdateView(generics.UpdateAPIView):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
-
-from django.http import HttpResponse
-
-# def is_rated(request, user_id, advert_id):
-#     rate_exists = Rate.objects.filter(user_id=user_id, adv=advert_id).exists()
-#     if rate_exists:
-#         # User has rated the advertisement
-#         return HttpResponse('User has rated the advertisement')
-#     else:
-#         # User has not rated the advertisement
-#         return HttpResponse('User has not rated the advertisement')
-
-from django.http import HttpResponse
-# from CustomUser.models import CustomUser
-# from .models import CustomAdvertisement
-
-# def is_rated(request, user_id, advert_id):
-
-#     user = CustomUser.objects.get(id=user_id)
-#     advert = CustomAdvertisement.objects.get(id=advert_id)
-
-#     try:
-#         rate = Rate.objects.get(user=user, adv=advert)
-#     except Rate.DoesNotExist:
-#         rate = None
-
-#     if rate:
-#         return HttpResponse('User has rated the advertisement')
-#     else:
-#         return HttpResponse('User has not rated the advertisement')
 from django.views import View
-
+from django.http import HttpResponse
 class IsRatedView(View):
     def get(self, request, user_id, advert_id):
         user = CustomUser.objects.get(id=user_id)
@@ -195,23 +165,25 @@ class IsRatedView(View):
         
         return response
 
+
 class PayForAdvertisement(views.APIView):
-    def get(self, request, id):
+    def post(self, requset):
+        id = self.request.POST['ad_id']
         advertisement = CustomAdvertisement.objects.get(id=id)
         if advertisement is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        email = request.user
+        email = self.request.user
         user = CustomUser.objects.get(email=email)
         user_wealth = user.wallet
         cost = advertisement.price
         
-        start_date_input = self.request.query_params.get('start_date', None)
-        end_date_input = self.request.query_params.get('end_date', None)
+        start_date_input = self.request.POST['start_date']
+        end_date_input = self.request.POST['end_date']
         
         start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
         end_date = datetime.strptime(end_date_input, "%Y-%m-%d").date()
         date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
-        
+        print(date_range)
         cost = cost * len(date_range)     
         if user_wealth < cost:
             return Response("Not enough money", status=status.HTTP_406_NOT_ACCEPTABLE)
@@ -234,3 +206,43 @@ class PayForAdvertisement(views.APIView):
             owner.save()
             
             return Response("Successfull", status=status.HTTP_200_OK)
+        
+# class PayForAdvertisement(views.APIView):
+#     def get(self, request, id):
+#         advertisement = CustomAdvertisement.objects.get(id=id)
+#         if advertisement is None:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+#         email = request.user
+#         user = CustomUser.objects.get(email=email)
+#         user_wealth = user.wallet
+#         cost = advertisement.price
+        
+#         start_date_input = self.request.query_params.get('start_date', None)
+#         end_date_input = self.request.query_params.get('end_date', None)
+        
+#         start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
+#         end_date = datetime.strptime(end_date_input, "%Y-%m-%d").date()
+#         date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+        
+#         cost = cost * len(date_range)     
+#         if user_wealth < cost:
+#             return Response("Not enough money", status=status.HTTP_406_NOT_ACCEPTABLE)
+#         else:           
+#             for date in date_range:
+#                 custom_date = CustomDate.objects.get(date=date, adv_id=id)
+#                 if custom_date is None:
+#                     return Response(f"The car is not available on {date}", status=status.HTTP_403_FORBIDDEN)
+            
+#             for date in date_range:
+#                 custom_date = CustomDate.objects.get(date=date, adv_id=id)
+#                 advertisement.available_date_list.remove(custom_date)
+#                 custom_date.delete()
+#             advertisement.save()
+            
+#             user.wallet -= cost
+#             owner = CustomUser.objects.get(id = advertisement.owner_id)
+#             owner.wallet += cost
+#             user.save()
+#             owner.save()
+            
+#             return Response("Successfull", status=status.HTTP_200_OK)
