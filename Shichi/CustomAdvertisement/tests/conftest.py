@@ -34,3 +34,10 @@ def advertisement_update_view_url():
         return reverse('advertisement_update', kwargs={'pk': advertisement_id})
     
     return do_advertisement_update_view_url
+
+@pytest.fixture
+def advertisement_search_view_url():
+    def do_advertisement_search_view_url(car_name):
+        return reverse('advertisement_search')+(f'?search={car_name}')
+    
+    return do_advertisement_search_view_url
