@@ -168,7 +168,7 @@ class IsRatedView(View):
 
 class PayForAdvertisement(views.APIView):
     def post(self, requset):
-        id = self.request.POST['ad_id']
+        id = self.request.data['ad_id']
         advertisement = CustomAdvertisement.objects.get(id=id)
         if advertisement is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -177,14 +177,15 @@ class PayForAdvertisement(views.APIView):
         user_wealth = user.wallet
         cost = advertisement.price
         
-        start_date_input = self.request.POST['start_date']
-        end_date_input = self.request.POST['end_date']
+        start_date_input = self.request.data['start_date']
+        end_date_input = self.request.data['end_date']
         
         start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
         end_date = datetime.strptime(end_date_input, "%Y-%m-%d").date()
         date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
         print(date_range)
-        cost = cost * len(date_range)     
+        cost = cost * len(date_range)  
+        print(user_wealth ," ", cost, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")   
         if user_wealth < cost:
             return Response("Not enough money", status=status.HTTP_406_NOT_ACCEPTABLE)
         else:           
