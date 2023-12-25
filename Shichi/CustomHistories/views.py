@@ -21,4 +21,4 @@ class CustomHistoriesViewSet(APIView):
             all_serializers = CustomHistoriesSerializer(queryset, many=True)
             return Response(all_serializers.data, status=status.HTTP_202_ACCEPTED)
         else:
-            return Response({'error': 'No related history found.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response([], status=status.HTTP_404_NOT_FOUND)
