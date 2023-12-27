@@ -15,10 +15,10 @@ class CustomHistoriesViewSet(APIView):
     serializer_class = CustomHistoriesSerializer
 
     def get(self, request):
-        queryset = CustomHistories.objects.filter(advertisement__owner_id=request.user.id)
+        queryset = CustomHistories.objects.filter(customuser=request.user.id)
         
         if queryset.exists():
             all_serializers = CustomHistoriesSerializer(queryset, many=True)
             return Response(all_serializers.data, status=status.HTTP_202_ACCEPTED)
         else:
-            return Response({'error': 'No related history found.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response([], status=status.HTTP_404_NOT_FOUND)

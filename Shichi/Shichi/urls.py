@@ -50,4 +50,4 @@ urlpatterns = [
     path('history/', include('CustomHistories.urls')),
     path('chat/', include('Chat.urls')),
     path('payments/', include('Payments.urls')),
-]+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

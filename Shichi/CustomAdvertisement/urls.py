@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import customAdvertisementShowView, customAdvertisementViewSet, customAdvertisementCreateView, customAdvertisementDeleteView,customAdvertisementUpdateView,customAdvertisementSearchView, CustomAdvertisementFilterView
+from .views import customAdvertisementShowView, customAdvertisementViewSet, customAdvertisementCreateView, customAdvertisementDeleteView,customAdvertisementUpdateView,customAdvertisementSearchView, CustomAdvertisementFilterView, customAdvertisementUserView
 from .views import CommentViewSet, CommentCreateView, CommentDeleteView, CommentUpdateView
 from .views import RateViewSet, RateCreateView, RateDeleteView, RateUpdateView, PayForAdvertisement
+from .views import IsRatedView
 urlpatterns = [
     path('list/', customAdvertisementViewSet.as_view({'get': 'list'}), name='advertisement_list'),
     path('show/<int:id>/', customAdvertisementShowView.as_view(), name='advertisement_show'),
@@ -10,6 +11,7 @@ urlpatterns = [
     path('update/<int:pk>/', customAdvertisementUpdateView.as_view(), name='advertisement_update'),
     path('search/', customAdvertisementSearchView.as_view(), name='advertisement_search'),
     path('filter/', CustomAdvertisementFilterView.as_view(), name='advertisement_filter'),
+    path('myadvertisement/', customAdvertisementUserView.as_view(), name='advertisement_user'),
     
     path('list-comment/', CommentViewSet.as_view({'get': 'list'}), name = 'list-comment'),
     path('create-comment/', CommentCreateView.as_view(), name='create-comment'),
@@ -21,6 +23,9 @@ urlpatterns = [
     path('delete-rate/<int:pk>/', RateDeleteView.as_view(), name='delete-rate'),
     path('update-rate/<int:pk>/', RateUpdateView.as_view(), name='update-rate'),
     
-    path('pay/<int:id>/', PayForAdvertisement.as_view(), name='pay'),
+#     path('pay/<int:id>/', PayForAdvertisement.as_view(), name='pay'),
     
+    path('is-rated/<int:user_id>/<int:advert_id>/', IsRatedView.as_view(), name='is_rated'),
+    
+    path('pay/', PayForAdvertisement.as_view(), name='pay'),
 ]
