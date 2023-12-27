@@ -12,7 +12,7 @@ class customAdvertisementCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'owner_id', 'available_date_list']  
 
 class customAdvertisementSerializer(serializers.ModelSerializer):
-    car_images = CustomCarImageSerializer(read_only=True, many=True)
+    #car_images = CustomCarImageSerializer(read_only=True, many=True)
     average_rating = serializers.SerializerMethodField()
 
     class Meta:
