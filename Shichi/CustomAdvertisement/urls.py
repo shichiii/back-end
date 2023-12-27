@@ -22,4 +22,5 @@ urlpatterns = [
     path('update-rate/<int:pk>/', RateUpdateView.as_view(), name='update-rate'),
     
     path('pay/<int:id>/', PayForAdvertisement.as_view(), name='pay'),
+    
 ]
