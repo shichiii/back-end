@@ -7,6 +7,9 @@ from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APIClient, APITestCase
 # from user_profile.models import Profile
 
+
+
+
 class AccountTest(APITestCase):
     def setUp(self):
         # self.client = APIClient()
