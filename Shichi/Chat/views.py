@@ -19,7 +19,7 @@ class ModelViewSetMessage(views.APIView):
     serializer_class = MessageSerializers
     queryset = Message.objects.all()
 
-    def get(self, request, room_id):
+    def get(self, request, room_id): 
         try:
             queryset = Message.objects.filter(room=room_id)
         except Message.DoesNotExist:
