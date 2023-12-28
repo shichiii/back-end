@@ -43,26 +43,64 @@ def advertisement_search_view_url():
     return do_advertisement_search_view_url
 
 @pytest.fixture
-def advertisement_filter_view_url():
-    def do_advertisement_filter_view_url(lower_price, upper_price, car_category, car_color, start_date, end_date, state):
-        url = 'advertisement_search'
-        if lower_price:
-            url += f'?lower_price={lower_price}'
-        if upper_price:
-            url += f'&?upper_price={upper_price}'
-        if car_category:
-            url += f'&car_category={car_category}'   
-        if car_color:
-            url += f'&car_color={car_color}'
-        if start_date:
-            url += f'&start_date={start_date}' 
-        if end_date:
-            url += f'&end_date={end_date}' 
-        if state:
-            url += f'&state={state}' 
-        
-        url += '/'
-            
+def advertisement_filter_lowerprice_view_url():
+    def do_advertisement_filter_lowerprice_view_url(lower_price):
+        url = reverse('advertisement_filter')
+        url += f'?lower_price={lower_price}'
         return url
     
-    return do_advertisement_filter_view_url
+    return do_advertisement_filter_lowerprice_view_url
+
+@pytest.fixture
+def advertisement_filter_upperprice_view_url():
+    def do_advertisement_filter_upperprice_view_url(upper_price):
+        url = reverse('advertisement_filter')
+        url += f'?upper_price={upper_price}'
+        return url
+    
+    return do_advertisement_filter_upperprice_view_url
+
+@pytest.fixture
+def advertisement_filter_carcategory_view_url():
+    def do_advertisement_filter_carcategory_view_url(car_category):
+        url = reverse('advertisement_filter')
+        url += f'?car_category={car_category}'
+        return url
+    
+    return do_advertisement_filter_carcategory_view_url
+
+@pytest.fixture
+def advertisement_filter_carcolor_view_url():
+    def do_advertisement_filter_carcolor_view_url(car_color):
+        url = reverse('advertisement_filter')
+        url += f'?car_color={car_color}'
+        return url
+    
+    return do_advertisement_filter_carcolor_view_url
+
+@pytest.fixture
+def advertisement_filter_startdate_view_url():
+    def do_advertisement_filter_startdate_view_url(start_date):
+        url = reverse('advertisement_filter')
+        url += f'?start_date={start_date}'
+        return url
+    
+    return do_advertisement_filter_startdate_view_url
+
+@pytest.fixture
+def advertisement_filter_enddate_view_url():
+    def do_advertisement_filter_enddate_view_url(end_date):
+        url = reverse('advertisement_filter')
+        url += f'?end_date={end_date}'
+        return url
+    
+    return do_advertisement_filter_enddate_view_url
+
+@pytest.fixture
+def advertisement_filter_state_view_url():
+    def do_advertisement_filter_state_view_url(state):
+        url = reverse('advertisement_filter')
+        url += f'?state={state}'
+        return url
+    
+    return do_advertisement_filter_state_view_url
