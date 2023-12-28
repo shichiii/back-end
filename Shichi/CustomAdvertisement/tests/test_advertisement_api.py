@@ -3,7 +3,6 @@ from rest_framework import status
 from model_bakery import baker
 from CustomAdvertisement.models import CustomAdvertisement
 from CustomUser.models import CustomUser
-from CustomCarImage.models import CustomCarImage
 
 @pytest.mark.django_db
 class TestCustomAdvertisementViewSet:
@@ -74,7 +73,6 @@ class TestCustomAdvertisementCreateView:
 
     def test_if_post_request_creates_object(self, api_client, advertisement_create_view_url):
         user = baker.make(CustomUser)  
-        image = baker.make(CustomCarImage)
         api_client.force_authenticate(user=user)
 
         data = {     
@@ -83,7 +81,6 @@ class TestCustomAdvertisementCreateView:
             "end_date": "2023-11-03",
             "price": "20.00",  
             "description": "nullllll",
-            "car_images": [image.pk],
             "car_name": "new car",
             "car_color": "black",
             "car_produced_date": "2023-12-13",
@@ -121,23 +118,17 @@ class TestCustomAdvertisementUpdateView:
 
     def test_if_put_request_updates_object(self, api_client, advertisement_update_view_url):
         obj = baker.make(CustomAdvertisement)
-        image = baker.make(CustomCarImage)
         user = baker.make(CustomUser)  
         api_client.force_authenticate(user=user)
  
         data = {
             "start_date": obj.start_date,
             "end_date": obj.end_date,
-            "car_images": [image.pk],
             "car_color": "black",
             "car_produced_date": obj.car_produced_date,
         }
 
         response = api_client.put(advertisement_update_view_url(obj.pk), data=data)
-        print(response.content)
-        print(response.data)
-        print(obj.car_images)
-
         assert response.status_code == status.HTTP_200_OK
         obj.refresh_from_db()
         assert obj.car_color == "black"
