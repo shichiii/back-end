@@ -6,6 +6,7 @@ from rest_framework import generics, viewsets, filters, status
 from rest_framework.response import Response
 from CustomUser.models import CustomUser
 from CustomDate.models import CustomDate
+from CustomHistories.models import CustomHistories
 from datetime import datetime, timedelta
 from django.db.models import Q
 
@@ -49,6 +50,7 @@ class customAdvertisementCreateView(generics.CreateAPIView):
         instance = CustomAdvertisement.objects.get(id=id)
         instance.available_date_list.set(available_date_list)
         instance.save()
+        CustomHistories.objects.create(user=user ,take_or_own = "own" , advertisement =  instance )
         
 class customAdvertisementUserView(generics.ListAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -200,6 +202,7 @@ class PayForAdvertisement(views.APIView):
                 custom_date.delete()
             advertisement.save()
             
+            CustomHistories.objects.create(user=user ,take_or_own = "take" , advertisement =  advertisement )
             user.wallet -= cost
             owner = CustomUser.objects.get(id = advertisement.owner_id)
             owner.wallet += cost
