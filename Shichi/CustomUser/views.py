@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from .models import CustomUser
 from .serializers import SetPasswordResetSerializer, UpdateCustomUserWalletSerializer, CustomUserSerializer, LoginSignupCustomUserSerializer, UpdateCustomUserSerializer
 from django.contrib.auth.hashers import make_password, check_password
+from rest_framework.permissions import IsAuthenticated
+from django.http import Http404
 
 # Create your views here.
 class CustomUserViewSet(viewsets.ModelViewSet):
@@ -66,7 +68,8 @@ class DeleteCustomUser(generics.DestroyAPIView):
         if user != instance:
             return Response({'error': 'User Not Allowed.'}, status=status.HTTP_403_FORBIDDEN)
         instance.delete()
-
+        return Response({'message': 'User deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+    
 from .serializers import PasswordResetSerializer   
 from rest_framework import status
 from rest_framework.response import Response
