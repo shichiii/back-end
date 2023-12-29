@@ -138,12 +138,15 @@ class PasswordResetConfirmView(APIView):
             return Response({'error': 'Invalid user ID.'}, status=status.HTTP_400_BAD_REQUEST)
  
     
-class RequestForWallet(APIView):
+class RequestForWallet(generics.UpdateAPIView):
     serializer_class = UpdateCustomUserWalletSerializer
-    def post(self, request):
-        email = request.user
+    queryset = CustomUser.objects.all()
+
+    def update(self, instance, *args, **kwargs):
+        email = self.request.user
+        id = kwargs.get('pk')
         user = CustomUser.objects.get(email=email)
-        if user is not None:
+        if user.id == id:
             ser = UpdateCustomUserWalletSerializer(data=self.request.data)
             if ser.is_valid():
                 wallet = ser.validated_data['wallet']
