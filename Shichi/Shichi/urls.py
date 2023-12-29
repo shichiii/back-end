@@ -26,15 +26,16 @@ from rest_framework_swagger.views import get_swagger_view
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-
+import rest_framework
 schema_view = get_schema_view(
     openapi.Info(
         title="Shichi API",
         default_version='v1',
-        description="Welcome to the world of Shichi",
+        description="Beare",
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
+    authentication_classes=[rest_framework.authentication.TokenAuthentication],
 )
 
 urlpatterns = [
@@ -50,4 +51,5 @@ urlpatterns = [
     path('history/', include('CustomHistories.urls')),
     path('chat/', include('Chat.urls')),
     path('payments/', include('Payments.urls')),
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

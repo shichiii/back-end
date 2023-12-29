@@ -28,6 +28,7 @@ class MyCustomUser(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         try:
             user_id = request.user.id
+            print(user_id, "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPp")
             user = CustomUser.objects.get(id=user_id)
             serializer = self.serializer_class(user)
             return Response(serializer.data)

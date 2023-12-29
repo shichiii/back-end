@@ -115,11 +115,10 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
         queryset = queryset.filter(price__range=(lower_price_input, upper_price_input))
         return queryset
     
-    
-    
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
+    queryset = Comment.objects.all().order_by('-created_date')
     serializer_class = CommentSerializer
+
 
 class CommentCreateView(generics.CreateAPIView):
     queryset = Comment.objects.all()
