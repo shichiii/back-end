@@ -150,7 +150,8 @@ class RateUpdateView(generics.UpdateAPIView):
     serializer_class = RateSerializer
 from django.views import View
 from django.http import HttpResponse
-class IsRatedView(View):
+
+class IsRatedView(views.APIView):
     def get(self, request, user_id, advert_id):
         user = CustomUser.objects.get(id=user_id)
         advert = CustomAdvertisement.objects.get(id=advert_id)
@@ -161,7 +162,7 @@ class IsRatedView(View):
             response.status_code = 200
         except:
             response = HttpResponse('User has not rated the advertisement')
-            response.status_code = 400
+            # response.status_code = 400
         
         return response
 
