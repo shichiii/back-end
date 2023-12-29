@@ -114,6 +114,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
     @sync_to_async
     def premission(self):
-        if ChatRoom.objects.filter(sender=self.scope['user']).exists() == False or ChatRoom.objects.filter(reciver=self.scope['user']).exists() == False:
+        if ChatRoom.objects.filter(sender=self.scope['user'] , pk = self.room_id).exists() == False and ChatRoom.objects.filter(reciver=self.scope['user'] , pk = self.room_id).exists() == False:
             return False
         return True
