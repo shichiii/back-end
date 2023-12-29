@@ -1,5 +1,4 @@
 from django.db import models
-from CustomHistories.models import CustomHistories
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.db import models
@@ -20,7 +19,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_staff', True)
         return self.create_user(email, password, **extra_fields)
-  
+
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.CharField(unique=True, max_length=50)
@@ -29,7 +28,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_number = PhoneNumberField(null=True, blank=True, unique=True)
     wallet = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True)
-    history = models.ForeignKey(CustomHistories, on_delete=models.CASCADE, null=True, blank=True)
     #############################################################################
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
