@@ -1,168 +1,125 @@
 from django.test import TestCase
 import json
-from django.contrib.auth.models import User
+from .models import CustomUser
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APIClient, APITestCase
+from Shichi.urls import *
+from django.contrib.auth import get_user_model
+from phonenumbers import parse, PhoneNumberFormat
+from phonenumber_field.phonenumber import PhoneNumber
+
+
 # from user_profile.models import Profile
-
-
-
-
-class AccountTest(APITestCase):
+# 5 tests
+class UserTest(APITestCase):
     def setUp(self):
-        # self.client = APIClient()
-        # self.user = User.objects.create_user(first_name="test1", last_name = "test2", email = "test@gmail.com", password="Ab654321")
-        # self.user.is_active = True
-        # self.user.save()
-        pass
+        self.client = APIClient()
+        self.user = CustomUser.objects.create_user(first_name="test1", last_name = "test2", email = "test@gmail.com", password="Ab654321")
+        self.user.is_active = True
+        self.user.save()
     
-    def test_register_success(self):
-        # url = reverse("account:register")
-        # data = {"first_name": "test1", "last_name": "test2", "email" = "test@gmail.com", "password": "Ab654321"}
-        # response = self.client.post(url, data, format="json")
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        pass
+    def test_login_success(self):
+        url = reverse('user:login')
+        data = {"email" : "test@gmail.com", "password": "Ab654321"}
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
     
-    def test_register_failure_password(self):
-        # url = reverse("account:register")
-        # data = {"first_name": "test1", "last_name": "test2", "password": "4321"}
-        # response = self.client.post(url, data, format="json")
-        # self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        pass
+    def test_login_failure_password(self):
+        url = reverse("user:login")
+        data = {"password": "4321"}
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
-    def test_register_failure_repeatetive_email(self):
-        # User.objects.create_user(
-        #     username="test_user3", password="Ab654321", email="email@eamil.com"
-        # )
-        # url = reverse("account:register")
-        # data = {
-        #     "username": "test_user2",
-        #     "password": "Ab654321",
-        #     "email": "email@eamil.com",
-        # }
-        # response = self.client.post(url, data, format="json")
-        # self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_signup_failure_repeatetive_email(self):
+        CustomUser.objects.create_user(
+            first_name="test1", last_name = "test2", password="Ab654321", email="test@eamil.com"
+        )
+        url = reverse("user:signup")
+        data = {
+            "first_name": "test",
+            "last_name": "test",
+            "password": "Ab654321",
+            "email": "test@eamil.com",
+        }
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # self.assertIn(
         #     ErrorDetail(
         #         string="There is another account with this email", code="invalid"
         #     ),
         #     response.data["email"],
         # )
-        pass
-
-    def test_register_failure_repeatetive_username(self):
-        # User.objects.create_user(
-        #     username="test_user3", password="Ab654321", email="email@eamil.com"
-        # )
-        # url = reverse("account:register")
-        # data = {
-        #     "username": "test_user3",
-        #     "password": "Ab654321",
-        #     "email": "email2@eamil.com",
-        # }
-        # response = self.client.post(url, data, format="json")
-        # self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        # self.assertIn(
-        #     ErrorDetail(
-        #         string="A user with that username already exists.", code="unique"
-        #     ),
-        #     response.data["username"],
-        # )
-        pass
 
     def test_login(self):
-        # url = reverse("account:login")
-        # response = self.client.post(
-        #     url, {"username": "test_user", "password": "Ab654321"}, format="json"
-        # )
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # self.assertTrue("refresh" in response.data)
-        # self.assertTrue("access" in response.data)
-        pass
-    
-    def test_change_password_failure_length(self):
-        # self.client.force_authenticate(self.user)
-        # url = reverse("account:change_password")
-        # data = {
-        #     "old_password": "654321",
-        #     "new_password": "654321",
-        #     "new_password2": "654321",
-        # }
-        # response = self.client.put(url, data, format="json")
-        # self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        # self.assertIn(
-        #     ErrorDetail(string="Password was entered incorrectly", code="invalid"),
-        #     response.data["non_field_errors"],
-        # )
-        pass
+        url = reverse("user:login")
+        response = self.client.post(
+            url, {"email": "test@gmail.com", "password": "Ab654321"}, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue("refresh" in response.data)
+        self.assertTrue("access" in response.data)
+         
+    def login(self, email, password):
+        url = reverse('user:login')
+        data = json.dumps({'email': email, 'password': password})
+        response = self.client.post(url, data, content_type='application/json')
+        if response.status_code == status.HTTP_200_OK:
+            access_token = response.data['access']
+            return access_token
+        else:
+            return "incorrect"
+        
+    def post_login(self, data, user):
+        token = self.login(self.user.email, 'mo@gmail.com')
+        self.client.credentials(Authorization='Bearer' + token)
+       
+        response = self.client.post(self.url, data=data)
+        return response.data  
+          
+    def test_update_custom_user(self):
+        token = self.login(self.user.email, "Ab654321")
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+        url = reverse('user:update', kwargs={'pk': self.user.pk})
+        # phone_number = PhoneNumber("+14155552671")
+        # json_string = json.dumps({'phone_number': phone_number}, cls=PhoneNumberEncoder)
 
-    def test_change_password_failure_length(self):
-        # self.client.force_authenticate(self.user)
-        # url = reverse("account:change_password")
-        # data = {
-        #     "old_password": "Ab654321",
-        #     "new_password": "654321",
-        #     "new_password2": "654321",
-        # }
-        # response = self.client.put(url, data, format="json")
-        # self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        pass
+        data = {
+            'first_name': 'UpdatedFirstName',
+            'last_name': 'UpdatedLastName',
+            'phone_number': '+12345678901',
+            
+        }
+        # parsed_phone_number = parse(data['phone_number'], None)
+        # formatted_phone_number = phone_number.format_number(parsed_phone_number, PhoneNumberFormat.E164)
+        # data['phone_number'] = formatted_phone_number
+        response = self.client.put(url, data, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['first_name'], data['first_name'])
+        self.assertEqual(response.data['last_name'], data['last_name'])
+        self.assertEqual(response.data['phone_number'], data['phone_number'])
+        return response.data
 
-    def test_change_password_failure_not_match_password(self):
-        # self.client.force_authenticate(self.user)
-        # url = reverse("account:change_password")
-        # data = {
-        #     "old_password": "Ab654321",
-        #     "new_password": "abcd4321",
-        #     "new_password2": "abcd432100",
-        # }
-        # response = self.client.put(url, data, format="json")
-        # self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        # self.assertIn(
-        #     ErrorDetail(string="Passwords are not the same", code="invalid"),
-        #     response.data["non_field_errors"],
-        # )
-        pass
+    def test_update_custom_user_permission_denied(self):
+        token = self.login(self.user.email, "Ab654321")
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+        url = reverse('user:update', kwargs={'pk': self.user.pk + 1})
+        # phone_number = PhoneNumber("+14155552671")
+        # json_string = json.dumps({'phone_number': phone_number}, cls=PhoneNumberEncoder)
 
-    def test_change_password_success(self):
-        # self.client.force_authenticate(self.user)
-        # url = reverse("account:change_password")
-        # data = {
-        #     "old_password": "Ab654321",
-        #     "new_password": "abcd4321",
-        #     "new_password2": "abcd4321",
-        # }
-        # response = self.client.put(url, data, format="json")
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        pass
+        data = {
+            'first_name': 'UpdatedFirstName',
+            'last_name': 'UpdatedLastName',
+            'phone_number': '+12345678901',
+            
+        }
+        # parsed_phone_number = parse(data['phone_number'], None)
+        # formatted_phone_number = phone_number.format_number(parsed_phone_number, PhoneNumberFormat.E164)
+        # data['phone_number'] = formatted_phone_number
+        response = self.client.put(url, data, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_forgot_password_failure(self):
-        # url = reverse("account:forgot_password")
-        # data = {"email": "shahrzad123azari@gmail.com"}
-        # response = self.client.post(url, data, format="json")
-        # self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        pass
-    
-    def test_forgot_password_success(self):
-        # url = reverse("account:forgot_password")
-        # data = {"email": "shahrzad123azari@gmail.com"}
-        # Profile.objects.create(user=self.user, email="shahrzad123azari@gmail.com")
-        # response = self.client.post(url, data, format="json")
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        pass
-
-    def test_logout(self):
-        # url = reverse("account:login")
-        # response = self.client.post(
-        #     url, {"username": "test_user", "password": "Ab654321"}, format="json"
-        # )
-
-        # url = reverse("account:logout")
-        # response = self.client.post(
-        #     url, {"refresh": response.data["refresh"]}, format="json"
-        # )
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # self.assertTrue("access" in response.data)
-        pass
+        return response.data

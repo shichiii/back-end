@@ -43,14 +43,17 @@ class UpdateCustomUser(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UpdateCustomUserSerializer
 
-    def perform_update(self, serializer):
-        instance = serializer.instance
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
         email = self.request.user
         user = CustomUser.objects.get(email=email)
         if user != instance:
-            print(instance , user)
-            return Response({'error': 'User Not Allowed.'}, status=status.HTTP_403_FORBIDDEN)
-        serializer.save()
+            return Response({'error': 'User does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class DeleteCustomUser(generics.DestroyAPIView):
     # permission_classes = [IsEditUser]
