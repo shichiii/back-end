@@ -2,13 +2,13 @@ from rest_framework import serializers
 from .models import ChatRoom , Message
 from CustomUser.models import CustomUser
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class CustomUserInRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id' , 'first_name' , 'last_name' , 'profile_image' ]  # Include the fields you want in the response
 class ChatRoomSerializers(serializers.ModelSerializer):
-    sender = CustomUserSerializer()
-    reciver = CustomUserSerializer()
+    sender = CustomUserInRoomSerializer()
+    reciver = CustomUserInRoomSerializer()
     class Meta:
         model = ChatRoom
         fields = '__all__'
