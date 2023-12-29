@@ -25,17 +25,20 @@ def custom_advertisement():
 
 @pytest.fixture
 def custom_history(user, custom_advertisement):
-    return baker.make(CustomHistories, advertisement=custom_advertisement, take_or_own="take", customuser=user)
+    return baker.make(CustomHistories, advertisement=custom_advertisement, take_or_own="take", user=user)
  
  
 @pytest.mark.django_db 
-def test_custom_histories_list(api_client, user): 
-    ad = baker.make(CustomAdvertisement)  
-    history = CustomHistories.objects.create(advertisement=ad, take_or_own="take") 
- 
+def test_custom_histories_list(api_client , user):  
+    user = baker.make(CustomUser)
+    print(user.id , "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
     api_client.force_login(user) 
+    ad = baker.make(CustomAdvertisement)  
+    history = CustomHistories.objects.create(advertisement=ad, take_or_own="take" , user = user) 
+ 
     url = reverse('CustomHistories_list') 
-    response = api_client.get(url) 
+    response = api_client.get(url)
+    print(response.data) 
  
     assert response.status_code == status.HTTP_202_ACCEPTED 
     assert len(response.data) == 1 
@@ -46,8 +49,10 @@ def test_custom_histories_list(api_client, user):
     assert history.created_date <= timezone.now() 
 
 @pytest.mark.django_db 
-def test_custom_histories_404(api_client, user): 
+def test_custom_histories_404(api_client): 
     
+    user = baker.make(CustomUser)
+    print(user)  
     api_client.force_login(user) 
     url = reverse('CustomHistories_list') 
     response = api_client.get(url)
@@ -74,6 +79,7 @@ def test_custom_histories_viewset_create(api_client, user, custom_advertisement)
     data = {
         'advertisement': custom_advertisement.id,
         'take_or_own': 'take',
+        'user' : user.id
     }
 
     response = api_client.post(url, data)
@@ -100,7 +106,8 @@ def test_custom_histories_viewset_update(api_client, user, custom_history):
     data = {
         'take_or_own': 'own',
         'advertisement': custom_history.advertisement.id,  # Include the advertisement ID
-        'id': custom_history.id
+        'id': custom_history.id , 
+        'user' : user.id
     }
 
     response = api_client.put(url, data)
@@ -122,8 +129,8 @@ def test_custom_histories_viewset_delete(api_client, user, custom_history):
 @pytest.mark.django_db
 def test_custom_histories_viewset_list_multiple(api_client, user):
     api_client.force_login(user)
-    custom_history_1 = baker.make(CustomHistories, customuser=user)
-    custom_history_2 = baker.make(CustomHistories, customuser=user)
+    custom_history_1 = baker.make(CustomHistories, user=user)
+    custom_history_2 = baker.make(CustomHistories, user=user)
 
     url = reverse('customhistoriesbackdoor-list')
 

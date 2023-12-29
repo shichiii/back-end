@@ -15,8 +15,9 @@ class CustomHistoriesViewSet(APIView):
     serializer_class = CustomHistoriesSerializer
 
     def get(self, request):
-        queryset = CustomHistories.objects.filter(user=request.user)
-        
+        queryset = CustomHistories.objects.filter(user=request.user.id)
+        print(queryset)
+        print(request.user)
         if queryset.exists():
             all_serializers = CustomHistoriesSerializer(queryset, many=True)
             return Response(all_serializers.data, status=status.HTTP_202_ACCEPTED)
