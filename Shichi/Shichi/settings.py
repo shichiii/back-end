@@ -102,10 +102,33 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# SWAGGER_SETTINGS = {
+#     'USE_SESSION_AUTH': False,
+#     'SECURITY_DEFINITIONS': {
+#         'Bearer': {
+#             'type': 'apiKey',
+#             'name': 'Authorization',
+#             'in': 'header'
+#         }
+#     },
+#     'LOGIN_URL': 'user:login',
+#     # 'LOGOUT_URL': 'user:logout',
+#     'DOC_EXPANSION': 'none',
+#     'APIS_SORTER': 'alpha',
+#     'SHOW_REQUEST_HEADERS': True,
+#     'VALIDATOR_URL': None,
+# }
 SWAGGER_SETTINGS = {
-    'PERSIST_AUTH': True,
-    'LOGIN_URL': 'user:login',  # This is the URL pattern for token issuance
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+        }
+    },
 }
+
+
 ROOT_URLCONF = 'Shichi.urls'
 
 ASGI_APPLICATION = 'Shichi.asgi.application'
