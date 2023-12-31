@@ -57,7 +57,7 @@ class customAdvertisementUserView(generics.ListAPIView):
     serializer_class = customAdvertisementSerializer
     filter_backends = [filters.OrderingFilter]
     
-    def get_adv_user(self):
+    def get_queryset(self):
         user = self.request.user
         queryset = super().get_queryset()
         queryset = queryset.filter(owner_id=user.pk)
