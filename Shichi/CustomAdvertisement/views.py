@@ -197,7 +197,7 @@ class PayForAdvertisement(views.APIView):
                     return Response(f"The car is not available on {date}", status=status.HTTP_403_FORBIDDEN)
             
             for date in date_range:
-                custom_date = CustomDate.objects.get(date=date, adv_id=id)
+                custom_date = CustomDate.objects.get(date=datetime.strptime(date, "%Y-%m-%d").date(), adv_id=id)
                 advertisement.available_date_list.remove(custom_date)
                 custom_date.delete()
             advertisement.save()
