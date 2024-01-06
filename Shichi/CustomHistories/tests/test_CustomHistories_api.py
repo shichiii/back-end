@@ -31,8 +31,7 @@ def custom_history(user, custom_advertisement):
 @pytest.mark.django_db 
 def test_custom_histories_list(api_client , user):  
     user = baker.make(CustomUser)
-    print(user.id , "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-    api_client.force_login(user) 
+    api_client.force_authenticate(user=user)
     ad = baker.make(CustomAdvertisement)  
     history = CustomHistories.objects.create(advertisement=ad, take_or_own="take" , user = user) 
  
