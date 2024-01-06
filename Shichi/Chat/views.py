@@ -31,6 +31,8 @@ class ModelViewSetMessage(views.APIView):
 class PersonChatRoomsAPIView(views.APIView):
     def get(self, request):
         try:
+            if request.user.is_anonymous:
+                return Response({"error": "Authorization needed"}, status=status.HTTP_401_UNAUTHORIZED)
             chat_rooms = ChatRoom.objects.filter(sender=request.user.id) | ChatRoom.objects.filter(reciver=request.user.id)
             serializer = ChatRoomSerializersget(chat_rooms, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)

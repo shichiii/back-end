@@ -12,7 +12,7 @@ websocket_urlpatterns = [
 app_name = 'chat'
 
 router_chatroom = DefaultRouter()
-router_chatroom.register(r'chatroom', ModelViewSetChatRoom)
+router_chatroom.register(r'chatroom', ModelViewSetChatRoom ,  basename= 'chatroom')
 
 # router_message = DefaultRouter()
 # router_message.register(r'Messages', ModelViewSetMessage , basename='message')
