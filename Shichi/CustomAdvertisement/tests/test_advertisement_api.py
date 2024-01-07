@@ -147,3 +147,39 @@ class TestCustomAdvertisementUpdateView:
         assert response.status_code == status.HTTP_200_OK
         obj.refresh_from_db()
         assert obj.car_color == "black"
+
+@pytest.mark.django_db
+class TestCustomAdvertisementUserView:
+    def test_if_post_request_is_status_405(self, api_client, advertisement_user_view_url):
+        response = api_client.post(advertisement_user_view_url)
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+    def test_if_put_request_is_status_405(self, api_client, advertisement_user_view_url):
+        response = api_client.put(advertisement_user_view_url)
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+    def test_if_patch_request_is_status_405(self, api_client, advertisement_user_view_url):
+        response = api_client.patch(advertisement_user_view_url)
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+    def test_if_delete_request_is_status_405(self, api_client, advertisement_user_view_url):
+        response = api_client.delete(advertisement_user_view_url)
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+        
+    def test_if_get_request_returns_objects(self, api_client, advertisement_user_view_url):
+        baker.make(CustomAdvertisement, _quantity=2)
+        user = baker.make(CustomUser) 
+        api_client.force_authenticate(user=user)
+        baker.make(CustomAdvertisement, owner_id=user.pk, _quantity=3, )
+        
+        response = api_client.get(advertisement_user_view_url)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 3 
+        
+    def test_if_get_request_nonexistent_object_returns_404(self, api_client, advertisement_user_view_url):
+        user = baker.make(CustomUser) 
+        baker.make(CustomAdvertisement, owner_id=user.pk, _quantity=3, )
+        
+        response = api_client.get(advertisement_user_view_url)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 0 

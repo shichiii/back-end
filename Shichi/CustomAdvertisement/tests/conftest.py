@@ -36,6 +36,10 @@ def advertisement_update_view_url():
     return do_advertisement_update_view_url
 
 @pytest.fixture
+def advertisement_user_view_url():
+    return reverse('advertisement_user')
+
+@pytest.fixture
 def advertisement_search_view_url():
     def do_advertisement_search_view_url(car_name):
         return reverse('advertisement_search')+(f'?search={car_name}')
