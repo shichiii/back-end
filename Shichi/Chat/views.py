@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-
+from django.db.models import Q
 
 def chat_room(request, room_id):
     return render(request, 'chat/chat.html') 
@@ -44,7 +44,10 @@ class PersonChatRoomsAPIView(views.APIView):
 @api_view(["GET"])
 def DoesHaveRome2Person(request, sender_id, reciver_id):
     try:
-        chat_room = ChatRoom.objects.get(sender=sender_id, reciver=reciver_id)
+        chat_room = ChatRoom.objects.get(
+            Q(sender=sender_id, reciver=reciver_id) |
+            Q(sender=reciver_id, reciver=sender_id)
+        )
         return Response(chat_room.id, status=status.HTTP_200_OK)
     except ChatRoom.DoesNotExist:
         return Response(False, status=status.HTTP_200_OK)
