@@ -31,7 +31,11 @@ class CustomAdvertisement(models.Model):
     car_produced_date = models.DateField()
     car_seat_count = models.IntegerField(null=True, blank=True)
     car_door_count = models.IntegerField(null=True, blank=True)
-    car_Is_cooler = models.BooleanField(default=False)
+    CAR_IS_COOLER = (
+        ('yes', 'yes'),
+        ('no', 'no')
+    )
+    car_Is_cooler = models.CharField(max_length=3, choices=CAR_IS_COOLER, default='yes')
     CAR_GEARBOX = (
         ('manual', 'manual'),
         ('automatic', 'automatic'),
