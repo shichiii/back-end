@@ -15,7 +15,17 @@ def chat_room(request, room_id):
 
 class ModelViewSetChatRoom(viewsets.ModelViewSet):
     queryset = ChatRoom.objects.all()
-    serializer_class = ChatRoomSerializersget
+    serializer_class = ChatRoomSerializers
+
+    def retrieve(self, request, *args, **kwargs):
+        room_id = kwargs.get('pk')
+        try:
+            queryset = ChatRoom.objects.get(id=room_id)
+        except ChatRoom.DoesNotExist:
+            return Response("not found", status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ChatRoomSerializersget(queryset)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ModelViewSetMessage(views.APIView):
     serializer_class = MessageSerializers
