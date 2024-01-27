@@ -101,10 +101,10 @@ class Comment(models.Model):
     created_date = models.DateField(auto_now_add=True)
     text = models.TextField()
     def __str__(self):
-        return f"{self.adv.car_name} {self.text}"
+        return f"{self.adv.car_name} - {self.user_id.first_name} {self.user_id.last_name}: {self.text}"
     def is_owner(self, user):
         return self.user == user
-    
+
 class Rate(models.Model):
     adv = models.ForeignKey(CustomAdvertisement, on_delete=models.CASCADE, related_name='rates')
     user_id = models.IntegerField(null=False, blank=False)
