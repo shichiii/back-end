@@ -86,7 +86,7 @@ class TestCustomAdvertisementCreateView:
             "car_produced_date": "2023-12-13",
             "car_seat_count": 4,
             "car_door_count": 4,
-            "car_Is_cooler": True,
+            "car_Is_cooler": "yes",
             "car_gearbox": "manual",
             "car_fuel": "40.00",
             "car_category": "economy",
