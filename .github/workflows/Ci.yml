@@ -24,6 +24,11 @@ jobs:
         ports:
           - 5432:5432
 
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
     steps:
       - uses: actions/checkout@v3
 
@@ -37,11 +42,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Tests
+      - name: Run Pytest
         env:
           DB: ${{ matrix.db }}
           DB_HOST: 'localhost'
           DB_PORT: ${{ matrix.db_port }}
           DB_PASSWORD: 1234
         run: |
-          cd Shichi/ && python manage.py test
+          cd Shichi/
+          pytest
