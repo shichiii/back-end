@@ -50,7 +50,6 @@ class customAdvertisementCreateView(generics.CreateAPIView):
         instance = CustomAdvertisement.objects.get(id=id)
         instance.available_date_list.set(available_date_list)
         instance.save()
-        CustomHistories.objects.create(user=user ,take_or_own = "own" , advertisement =  instance )
         
 class customAdvertisementUserView(generics.ListAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -205,6 +204,7 @@ class PayForAdvertisement(views.APIView):
             CustomHistories.objects.create(user=user ,take_or_own = "take" , advertisement =  advertisement )
             user.wallet -= cost
             owner = CustomUser.objects.get(id = advertisement.owner_id)
+            CustomHistories.objects.create(user=owner ,take_or_own = "own" , advertisement =  advertisement )
             owner.wallet += cost
             user.save()
             owner.save()
