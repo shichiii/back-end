@@ -28,6 +28,7 @@ class customAdvertisementSerializer(serializers.ModelSerializer):
             return avg_rating
         return 0
 class CommentSerializer(serializers.ModelSerializer):
+    # first = serializers.SerializerMe
     class Meta:
         model = Comment
         fields = '__all__'
