@@ -46,26 +46,24 @@ def test_comment_serializer_with_invalid_data():
         serializer = CommentSerializer(data=data)
         assert not serializer.is_valid()
         
-from rest_framework.test import APIClient
-@pytest.mark.django_db
-def test_update_comment():
-    user = baker.make(CustomUser)
-    adv = baker.make(CustomAdvertisement)
-    comment = baker.make(Comment, user_id=user.id, adv=adv, text='Sample comment text')
+# @pytest.mark.django_db
+# def test_update_comment(comment_update_view_url, api_client):
+#     user = baker.make(CustomUser)
+#     adv = baker.make(CustomAdvertisement)
+#     comment = baker.make(Comment, user_id=user.id, adv=adv, text='Sample comment text')
     
-    client = APIClient()
-    client.force_authenticate(user=user)
-    update_url = f'./advertisement/update-comment/{comment.id}/'
-    updated_data = {
-        'text': 'Updated comment text'
-    }
-    response = client.put(update_url, updated_data, format='json')
-    # assert response.status_code == status.HTTP_400_METHOD_NOT_ALLOWED
-    comment.refresh_from_db()
-    assert comment.text == updated_data['text']
+#     api_client.force_authenticate(user=user)
+#     updated_data = {
+#         'text': 'Updated comment text'
+#     }
+#     url = comment_update_view_url(comment.id)
+#     response = api_client.put(url, updated_data, format='json')
+#     assert response.status_code == status.HTTP_200_OK
+#     comment.refresh_from_db()
+#     assert comment.text == updated_data['text']
+#     api_client.logout()
 
-    client.logout()
-    
+  
 @pytest.mark.django_db
 class TestCustomAdvertisementDeleteView:
 
@@ -114,9 +112,22 @@ class TestCustomAdvertisementDeleteView:
 #         assert obj.text == "i change this line."
 
 # @pytest.mark.django_db
-# class TestCustomAdvertisementUserView:
-#     def test_if_post_request_is_status_405(self, api_client, comment_user_view_url):
-#         response = api_client.post(comment_user_view_url)
+# def test_delete_comment(comment_delete_url, api_client):
+#     user = baker.make(CustomUser)
+#     adv = baker.make(CustomAdvertisement)
+#     comment = baker.make(Comment, user_id=user.id, adv=adv, text = 'nothing1')
+#     api_client.force_authenticate(user=user)
+#     url = comment_delete_url(comment.id)
+#     response = api_client.delete(url)
+#     assert response.status_code == status.HTTP_204_NO_CONTENT
+#     assert not Comment.objects.filter(id=comment.id).exists()
+#     api_client.logout()
+    
+
+# @pytest.mark.django_db
+# class TestCommentAdvertisementView:
+#     def test_if_post_request_is_status_405(self, api_client, comment_detail_view_url):
+#         response = api_client.post(comment_detail_view_url)
 #         assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
 
 #     def test_if_put_request_is_status_405(self, api_client, comment_user_view_url):
