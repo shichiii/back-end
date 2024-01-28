@@ -1,5 +1,4 @@
 from django.db import models
-from CustomCarImage.models import CustomCarImage
 from CustomDate.models import CustomDate
 from django.core.validators import MaxValueValidator, MinValueValidator
 

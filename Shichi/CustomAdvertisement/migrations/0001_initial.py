@@ -10,7 +10,6 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('CustomCarImage', '0001_initial'),
         ('CustomDate', '0001_initial'),
     ]
 
@@ -37,7 +36,6 @@ class Migration(migrations.Migration):
                 ('location_geo_width', models.CharField(blank=True, max_length=30)),
                 ('location_geo_length', models.CharField(blank=True, max_length=30)),
                 ('available_date_list', models.ManyToManyField(to='CustomDate.customdate')),
-                ('car_images', models.ManyToManyField(to='CustomCarImage.customcarimage')),
             ],
         ),
         migrations.CreateModel(

@@ -79,7 +79,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'drf_yasg',
     'CustomAdvertisement',
-    'CustomCarImage',
+    #'CustomCarImage',
     'CustomHistories',
     'CustomDate',
     'CustomUser',
