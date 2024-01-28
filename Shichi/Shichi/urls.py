@@ -46,7 +46,6 @@ urlpatterns = [
         name='schema-redoc'),
     path('user/', include('CustomUser.urls')),
     path('advertisement/', include('CustomAdvertisement.urls')),
-    path('carimage/', include('CustomCarImage.urls')),
     path('date/', include('CustomDate.urls')),
     path('history/', include('CustomHistories.urls')),
     path('chat/', include('Chat.urls')),

@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import CustomAdvertisement, Comment, Rate
-from CustomCarImage.serializers import CustomCarImageSerializer
 from CustomDate.models import CustomDate
 from django.db.models import Avg
 from datetime import timedelta
