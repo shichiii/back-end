@@ -114,27 +114,27 @@ def advertisement_filter_state_view_url():
 
 
 
-# @pytest.fixture
-# def comment_detail_view_url():
-#     def do_comment_detail_view_url(comment_id):
-#         return reverse('list-comment', kwargs={'id': comment_id})
+@pytest.fixture
+def comment_detail_view_url():
+    def do_comment_detail_view_url(comment_id):
+        return reverse('list-comment', kwargs={'id': comment_id})
 
-#     return do_comment_detail_view_url
+    return do_comment_detail_view_url
 
-# @pytest.fixture
-# def comment_create_view_url():
-#     return reverse('create-comment')
+@pytest.fixture
+def comment_create_view_url():
+    return reverse('create-comment')
 
-# @pytest.fixture
-# def comment_delete_view_url():
-#     def do_comment_delete_view_url(comment_id):
-#         return reverse('delete-comment', kwargs={'pk': comment_id})
+@pytest.fixture
+def comment_delete_view_url():
+    def do_comment_delete_view_url(comment_id):
+        return reverse('delete-comment', kwargs={'pk': comment_id})
     
-#     return do_comment_delete_view_url
+    return do_comment_delete_view_url
 
-# @pytest.fixture
-# def comment_update_view_url():
-#     def do_comment_update_view_url(comment_id):
-#         return reverse('update-comment', kwargs={'pk': comment_id})
+@pytest.fixture
+def comment_update_view_url():
+    def do_comment_update_view_url(comment_id):
+        return reverse('update-comment', kwargs={'pk': comment_id})
     
-#     return do_comment_update_view_url
+    return do_comment_update_view_url
