@@ -168,85 +168,55 @@ class IsRatedView(views.APIView):
 
 
 class PayForAdvertisement(views.APIView):
-    def post(self, requset):
-        id = self.request.data['ad_id']
-        advertisement = CustomAdvertisement.objects.get(id=id)
-        if advertisement is None:
+    def post(self, request):
+        ad_id = request.data.get('ad_id')
+        start_date_input = request.data.get('start_date')
+        end_date_input = request.data.get('end_date')
+
+        try:
+            advertisement = CustomAdvertisement.objects.get(id=ad_id)
+        except CustomAdvertisement.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        email = self.request.user
-        user = CustomUser.objects.get(email=email)
+
+        user = request.user
         user_wealth = user.wallet
         cost = advertisement.price
-        
-        start_date_input = str(self.request.data['start_date'])
-        end_date_input = str(self.request.data['end_date'])
-        
-        start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
-        end_date = datetime.strptime(end_date_input, "%Y-%m-%d").date()
+
+        try:
+            start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
+            end_date = datetime.strptime(end_date_input, "%Y-%m-%d").date()
+        except ValueError:
+            return Response("Invalid date format. Please use YYYY-MM-DD.", status=status.HTTP_400_BAD_REQUEST)
+
+        if start_date > end_date:
+            return Response("End date must be after start date.", status=status.HTTP_400_BAD_REQUEST)
+
         date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
-        print(date_range)
-        cost = cost * len(date_range)  
-        print(user_wealth ," ", cost, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")   
+        cost *= len(date_range)
+
         if user_wealth < cost:
             return Response("Not enough money", status=status.HTTP_406_NOT_ACCEPTABLE)
-        else:           
-            for date in date_range:
-                custom_date = CustomDate.objects.get(date=date, adv_id=id)
-                if custom_date is None:
-                    return Response(f"The car is not available on {date}", status=status.HTTP_403_FORBIDDEN)
-            
-            for date in date_range:
-                custom_date = CustomDate.objects.get(date=datetime.strptime(date, "%Y-%m-%d").date(), adv_id=id)
-                advertisement.available_date_list.remove(custom_date)
-                custom_date.delete()
-            advertisement.save()
-            
-            CustomHistories.objects.create(user=user ,take_or_own = "take" , advertisement =  advertisement )
-            user.wallet -= cost
-            owner = CustomUser.objects.get(id = advertisement.owner_id)
-            CustomHistories.objects.create(user=owner ,take_or_own = "own" , advertisement =  advertisement )
-            owner.wallet += cost
-            user.save()
-            owner.save()
-            
-            return Response("Successfull", status=status.HTTP_200_OK)
-        
-# class PayForAdvertisement(views.APIView):
-#     def get(self, request, id):
-#         advertisement = CustomAdvertisement.objects.get(id=id)
-#         if advertisement is None:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-#         email = request.user
-#         user = CustomUser.objects.get(email=email)
-#         user_wealth = user.wallet
-#         cost = advertisement.price
-        
-#         start_date_input = self.request.query_params.get('start_date', None)
-#         end_date_input = self.request.query_params.get('end_date', None)
-        
-#         start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
-#         end_date = datetime.strptime(end_date_input, "%Y-%m-%d").date()
-#         date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
-        
-#         cost = cost * len(date_range)     
-#         if user_wealth < cost:
-#             return Response("Not enough money", status=status.HTTP_406_NOT_ACCEPTABLE)
-#         else:           
-#             for date in date_range:
-#                 custom_date = CustomDate.objects.get(date=date, adv_id=id)
-#                 if custom_date is None:
-#                     return Response(f"The car is not available on {date}", status=status.HTTP_403_FORBIDDEN)
-            
-#             for date in date_range:
-#                 custom_date = CustomDate.objects.get(date=date, adv_id=id)
-#                 advertisement.available_date_list.remove(custom_date)
-#                 custom_date.delete()
-#             advertisement.save()
-            
-#             user.wallet -= cost
-#             owner = CustomUser.objects.get(id = advertisement.owner_id)
-#             owner.wallet += cost
-#             user.save()
-#             owner.save()
-            
-#             return Response("Successfull", status=status.HTTP_200_OK)
+
+        for date in date_range:
+            try:
+                custom_date = CustomDate.objects.get(date=date, adv_id=ad_id)
+            except CustomDate.DoesNotExist:
+                return Response(f"The car is not available on {date}", status=status.HTTP_403_FORBIDDEN)
+
+        for date in date_range:
+            custom_date = CustomDate.objects.get(date=date, adv_id=ad_id)
+            advertisement.available_date_list.remove(custom_date)
+            custom_date.delete()
+
+        advertisement.save()
+
+        CustomHistories.objects.create(user=user, take_or_own="take", advertisement=advertisement)
+        user.wallet -= cost
+        owner = CustomUser.objects.get(id=advertisement.owner_id)
+        CustomHistories.objects.create(user=owner, take_or_own="own", advertisement=advertisement)
+        owner.wallet += cost
+        user.save()
+        owner.save()
+
+        return Response("Successful", status=status.HTTP_200_OK)
+    
