@@ -30,6 +30,10 @@ class customAdvertisementSerializer(serializers.ModelSerializer):
     
 from CustomUser.models import CustomUser
 
+class user_profile_image(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['profile_image']
 class CommentSerializer(serializers.ModelSerializer):
     user_first_name = serializers.SerializerMethodField()
     user_last_name = serializers.SerializerMethodField()
@@ -56,7 +60,12 @@ class CommentSerializer(serializers.ModelSerializer):
     def get_user_profile_image(self, obj):
         try:
             user = CustomUser.objects.get(id=obj.user_id)
-            return user.profile_image
+            # breakpoint()
+            if not user.profile_image:
+                return None  
+            else:
+                return user.profile_image
+            
         except CustomUser.DoesNotExist:
             return None  
         
