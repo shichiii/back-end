@@ -60,6 +60,7 @@ class CommentSerializer(serializers.ModelSerializer):
     def get_user_profile_image(self, obj):
         try:
             user = CustomUser.objects.get(id=obj.user_id)
+            # print(type(user.profile_image.url))
             # breakpoint()
             if not user.profile_image:
                 return None  
