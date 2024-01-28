@@ -178,8 +178,8 @@ class PayForAdvertisement(views.APIView):
         user_wealth = user.wallet
         cost = advertisement.price
         
-        start_date_input = self.request.data['start_date']
-        end_date_input = self.request.data['end_date']
+        start_date_input = str(self.request.data['start_date'])
+        end_date_input = str(self.request.data['end_date'])
         
         start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
         end_date = datetime.strptime(end_date_input, "%Y-%m-%d").date()
