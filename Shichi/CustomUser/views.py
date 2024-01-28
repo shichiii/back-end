@@ -58,19 +58,54 @@ class UpdateCustomUser(generics.UpdateAPIView):
         self.perform_update(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class DeleteCustomUser(generics.DestroyAPIView):
-    # permission_classes = [IsEditUser]
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
 
-    def perform_destroy(self, instance):
-        email = self.request.user
-        user = CustomUser.objects.get(email=email)
-        if user != instance:
-            return Response({'error': 'User Not Allowed.'}, status=status.HTTP_403_FORBIDDEN)
-        instance.delete()
-        return Response({'message': 'User deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
-    
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework import status
+from .models import CustomUser
+from .serializers import CustomUserSerializer
+from rest_framework.permissions import IsAuthenticated
+
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_custom_user(request, pk):
+    try:
+        user = CustomUser.objects.get(pk=pk)
+    except CustomUser.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    # if request.user != user:
+        # return Response({'error': 'You do not have permission to delete this user.'}, status=status.HTTP_403_FORBIDDEN)
+
+    user.delete()
+    return Response({'message': 'User deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+
+
+# class DeleteCustomUser(generics.DestroyAPIView):
+#     # permission_classes = [IsEditUser]
+#     queryset = CustomUser.objects.all()
+#     serializer_class = CustomUserSerializer
+
+#     def perform_destroy(self, instance):
+#         email = self.request.user
+#         user = CustomUser.objects.get(email=email)
+#         if user != instance:
+#             return Response({'error': 'User Not Allowed.'}, status=status.HTTP_403_FORBIDDEN)
+#         instance.delete()
+#         return Response({'message': 'User deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+# from django.http import HttpResponse, Http404
+# from django.shortcuts import get_object_or_404
+
+# def DeleteCustomUser(request, user_id):
+#     if not request.user.is_authenticated:
+#         return HttpResponse("You must be logged in to delete a user.", status=401)
+#     user_to_delete = get_object_or_404(CustomUser, id=user_id)
+#     user_to_delete.delete()
+#     return HttpResponse("User deleted successfully.") 
+
+
 from .serializers import PasswordResetSerializer   
 from rest_framework import status
 from rest_framework.response import Response
