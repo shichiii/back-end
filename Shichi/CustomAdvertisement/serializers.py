@@ -27,14 +27,40 @@ class customAdvertisementSerializer(serializers.ModelSerializer):
             avg_rating = rates.aggregate(avg_rating = Avg('rate'))['avg_rating']
             return avg_rating
         return 0
+    
+from CustomUser.models import CustomUser
+
 class CommentSerializer(serializers.ModelSerializer):
-    # first = serializers.SerializerMe
+    user_first_name = serializers.SerializerMethodField()
+    user_last_name = serializers.SerializerMethodField()
+    user_profile_image = serializers.SerializerMethodField()
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ['id', 'adv', 'user_id', 'user_profile_image','user_first_name', 'user_last_name', 'created_date', 'text']
+        read_only_fields = ['user_profile_image','user_first_name', 'user_last_name', 'created_date']
+
+    def get_user_first_name(self, obj):
+        try:
+            user = CustomUser.objects.get(id=obj.user_id)
+            return user.first_name
+        except CustomUser.DoesNotExist:
+            return None
+
+    def get_user_last_name(self, obj):
+        try:
+            user = CustomUser.objects.get(id=obj.user_id)
+            return user.last_name
+        except CustomUser.DoesNotExist:
+            return None
+        
+    def get_user_profile_image(self, obj):
+        try:
+            user = CustomUser.objects.get(id=obj.user_id)
+            return user.profile_image
+        except CustomUser.DoesNotExist:
+            return None  
         
 class RateSerializer(serializers.ModelSerializer):
-    # mean_rate = serializersl
     class Meta:
         model = Rate
         fields = '__all__'

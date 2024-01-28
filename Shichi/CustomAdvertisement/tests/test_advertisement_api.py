@@ -1,7 +1,7 @@
 import pytest
 from rest_framework import status
 from model_bakery import baker
-from CustomAdvertisement.models import CustomAdvertisement
+from CustomAdvertisement.models import CustomAdvertisement, Comment
 from CustomUser.models import CustomUser
 
 @pytest.mark.django_db
@@ -181,5 +181,121 @@ class TestCustomAdvertisementUserView:
         baker.make(CustomAdvertisement, owner_id=user.pk, _quantity=3, )
         
         response = api_client.get(advertisement_user_view_url)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 0 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+@pytest.mark.django_db
+class TestCommentCreateView:
+
+    def test_if_post_request_creates_object(self, api_client, comment_create_view_url):
+        user = baker.make(CustomUser)  
+        api_client.force_authenticate(user=user)
+        adv = baker.make(CustomAdvertisement)
+        data = {     
+            "user_id":user.pk,
+            "created_date": "2023-11-11",
+            "adv": adv.pk,  
+            "text": "this is just for test"
+        }
+
+        response = api_client.post(comment_create_view_url, data=data, format='json')
+        assert response.status_code == status.HTTP_201_CREATED
+        assert CustomAdvertisement.objects.count() == 1
+
+@pytest.mark.django_db
+class TestCustomAdvertisementDeleteView:
+
+    def test_if_delete_request_deletes_object(self, api_client, comment_delete_view_url):
+        obj = baker.make(CustomAdvertisement)
+        
+        response = api_client.delete(comment_delete_view_url(obj.pk))
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert Comment.objects.count() == 0
+
+    def test_if_delete_request_nonexistent_object_returns_404(self, api_client, comment_delete_view_url):
+        response = api_client.delete(comment_delete_view_url(9999999999))
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+        
+@pytest.mark.django_db
+class TestCustomAdvertisementUpdateView:
+
+    def test_if_put_request_updates_object(self, api_client, comment_update_view_url):
+        obj = baker.make(Comment)
+        user = baker.make(CustomUser)  
+        api_client.force_authenticate(user=user)
+ 
+        data = {
+            "user_id" : user.pk,
+            "created_date": obj.created_date,
+            "text": obj.text,
+        }
+
+        response = api_client.put(comment_update_view_url(obj.pk), data=data)
+        assert response.status_code == status.HTTP_200_OK
+        obj.refresh_from_db()
+        assert obj.car_color == "black"
+
+    def test_if_patch_request_updates_object(self, api_client, comment_update_view_url):
+        obj = baker.make(Comment)
+        user = baker.make(CustomUser)  
+        api_client.force_authenticate(user=user)
+        
+        data = {
+            "text": "i change this line.",
+            "owner_id": user.pk 
+        }
+
+        response = api_client.patch(comment_update_view_url(obj.pk), data=data, format='json')
+        assert response.status_code == status.HTTP_200_OK
+        obj.refresh_from_db()
+        assert obj.text == "i change this line."
+
+@pytest.mark.django_db
+class TestCustomAdvertisementUserView:
+    def test_if_post_request_is_status_405(self, api_client, comment_user_view_url):
+        response = api_client.post(comment_user_view_url)
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+    def test_if_put_request_is_status_405(self, api_client, comment_user_view_url):
+        response = api_client.put(comment_user_view_url)
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+    def test_if_patch_request_is_status_405(self, api_client, comment_user_view_url):
+        response = api_client.patch(comment_user_view_url)
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+    def test_if_delete_request_is_status_405(self, api_client, comment_user_view_url):
+        response = api_client.delete(comment_user_view_url)
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+        
+    def test_if_get_request_returns_objects(self, api_client, comment_user_view_url):
+        baker.make(Comment, _quantity=2)
+        user = baker.make(CustomUser) 
+        api_client.force_authenticate(user=user)
+        baker.make(Comment, owner_id=user.pk, _quantity=3, )
+        
+        response = api_client.get(comment_user_view_url)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == 3 
+        
+    def test_if_get_request_nonexistent_object_returns_404(self, api_client, comment_user_view_url):
+        user = baker.make(CustomUser) 
+        baker.make(Comment, owner_id=user.pk, _quantity=3, )
+        
+        response = api_client.get(comment_user_view_url)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 0 
