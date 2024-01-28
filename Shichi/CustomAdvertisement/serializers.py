@@ -64,7 +64,7 @@ class CommentSerializer(serializers.ModelSerializer):
             if not user.profile_image:
                 return None  
             else:
-                return user.profile_image
+                return user.profile_image.url
             
         except CustomUser.DoesNotExist:
             return None  

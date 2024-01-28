@@ -117,7 +117,7 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
         return queryset
     
 class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all().order_by('-created_date')
+    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
 
