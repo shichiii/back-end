@@ -181,8 +181,10 @@ class PayForAdvertisement(views.APIView):
         start_date_input = self.request.data['start_date']
         end_date_input = self.request.data['end_date']
         
-        start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
-        end_date = datetime.strptime(end_date_input, "%Y-%m-%d").date()
+        start_date = start_date_input
+        end_date = end_date_input
+        # start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
+        # end_date = datetime.strptime(end_date_input, "%Y-%m-%d").date()
         date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
         print(date_range)
         cost = cost * len(date_range)  
