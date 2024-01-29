@@ -2,8 +2,6 @@ from django.db import models
 from CustomDate.models import CustomDate
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-# Create your models here.
-
 class CustomAdvertisement(models.Model):
     owner_id = models.IntegerField(null=False, blank=False)
     start_date = models.DateField()

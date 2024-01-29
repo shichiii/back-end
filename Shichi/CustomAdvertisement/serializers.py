@@ -19,8 +19,6 @@ class customAdvertisementSerializer(serializers.ModelSerializer):
         fields = ['id', 'average_rating', 'owner_id', 'start_date', 'end_date','available_date_list', 'price', 'description', 'car_image1', 'car_image2', 'car_image3', 'car_name', 'car_color', 'car_produced_date', 'car_seat_count','car_door_count', 'car_Is_cooler', 'car_gearbox', 'car_fuel', 'car_category', 'location_state', 'location_geo_width', 'location_geo_length']
     
     def get_average_rating(self , obj):
-        print(obj.id)
-        print("*********************************************")
         rates = Rate.objects.filter(adv__id = obj.id).all()
         if rates.exists():
             avg_rating = rates.aggregate(avg_rating = Avg('rate'))['avg_rating']
@@ -59,8 +57,6 @@ class CommentSerializer(serializers.ModelSerializer):
     def get_user_profile_image(self, obj):
         try:
             user = CustomUser.objects.get(id=obj.user_id)
-            # print(type(user.profile_image.url))
-            # breakpoint()
             if not user.profile_image:
                 return None  
             else:

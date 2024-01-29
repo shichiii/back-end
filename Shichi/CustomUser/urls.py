@@ -9,8 +9,6 @@ from rest_framework_simplejwt.views import (
 
 from django.contrib.auth.views import (
     PasswordResetDoneView, 
-    # PasswordResetConfirmView,
-    # PasswordResetCompleteView
 )
 
 app_name = "user"
@@ -22,17 +20,11 @@ urlpatterns = [
     path('signup/', CreateCustomUser.as_view(), name='signup'),
     path('update/<int:pk>/', UpdateCustomUser.as_view(), name='update'),
     path('updatewallet/<int:pk>/', RequestForWallet.as_view(), name='updateWallet'),
-    # path('delete/<int:pk>/', DeleteCustomUser.as_view(), name='delete'),
-    # path('delete/<int:user_id>/',  DeleteCustomUser, name='delete'),
     path('delete/<int:user_id>/', delete_custom_user, name='delete'),
-    
-    
-    
     path('login/', TokenObtainPairView.as_view(), name='login'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('password-reset/', PasswordResetView.as_view(),name='password_reset'),
     path('password-reset/done/', PasswordResetDoneView.as_view(),name='password_reset_done'),
     path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(),name='password_reset_confirm'),
-        # path('password-reset-complete/',PasswordResetCompleteView.as_view(),name='password_reset_complete'),
 ]
 

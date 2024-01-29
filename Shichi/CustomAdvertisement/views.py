@@ -34,13 +34,11 @@ class customAdvertisementCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):       
         user = self.request.user       
         serializer.save(owner_id=user.pk)
-        
         id = serializer.data['id']
         start_date = serializer.data['start_date']
         end_date = serializer.data['end_date']
         start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
         end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
-        
         available_date_list=[]
         date_range = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
         for date in date_range:
@@ -76,7 +74,6 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        
         lower_price_input = self.request.query_params.get('lower_price', 0)
         upper_price_input = self.request.query_params.get('upper_price', 99999999999999999)
         car_category_input = self.request.query_params.get('car_category', None)
@@ -84,7 +81,6 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
         start_date_input = self.request.query_params.get('start_date', None)
         end_date_input = self.request.query_params.get('end_date', None)
         state_input = self.request.query_params.get('state', None)
-        
         
         if start_date_input and not end_date_input:
             start_date = datetime.strptime(start_date_input, "%Y-%m-%d").date()
@@ -101,8 +97,7 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
                 Q(start_date__range=(start_date, end_date)) |
                 Q(end_date__range=(start_date, end_date)) |
                 Q(available_date_list__date__gte=start_date, available_date_list__date__lte=end_date)
-            )
-        
+            )     
         
         if car_category_input:
             queryset = queryset.filter(car_category__icontains=car_category_input)
@@ -119,7 +114,6 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-
 
 class CommentCreateView(generics.CreateAPIView):
     queryset = Comment.objects.all()

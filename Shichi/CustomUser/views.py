@@ -79,15 +79,13 @@ def delete_custom_user(request, user_id):
 
 
 from .serializers import PasswordResetSerializer   
-from rest_framework import status
-from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import send_mail  # Import send_mail for sending the email.
+from django.core.mail import send_mail 
 
 class PasswordResetView(APIView):
     serializer_class = PasswordResetSerializer
@@ -118,14 +116,14 @@ class PasswordResetView(APIView):
 
             return Response({'message': 'Password reset email sent.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-from rest_framework import status
+    
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from Payments.views import go_to_gateway_view
+
 class PasswordResetConfirmView(APIView):
     serializer_class = SetPasswordResetSerializer
     def post(self, request, uidb64, token):

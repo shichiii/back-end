@@ -3,7 +3,6 @@ from .models import CustomUser
 # from CustomUserPermissions.serializers import PermissionSerializer
 from django.contrib.auth.hashers import make_password, check_password
 
-
 class LoginSignupCustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser

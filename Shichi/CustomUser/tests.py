@@ -10,8 +10,6 @@ from django.contrib.auth import get_user_model
 from phonenumbers import parse, PhoneNumberFormat
 from phonenumber_field.phonenumber import PhoneNumber
 
-
-# from user_profile.models import Profile
 # 5 tests
 class UserTest(APITestCase):
     def setUp(self):
@@ -45,12 +43,6 @@ class UserTest(APITestCase):
         }
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        # self.assertIn(
-        #     ErrorDetail(
-        #         string="There is another account with this email", code="invalid"
-        #     ),
-        #     response.data["email"],
-        # )
 
     def test_login(self):
         url = reverse("user:login")
@@ -73,8 +65,7 @@ class UserTest(APITestCase):
         
     def post_login(self, data, user):
         token = self.login(self.user.email, 'mo@gmail.com')
-        self.client.credentials(Authorization='Bearer' + token)
-       
+        self.client.credentials(Authorization='Bearer' + token)  
         response = self.client.post(self.url, data=data)
         return response.data  
           
@@ -82,20 +73,13 @@ class UserTest(APITestCase):
         token = self.login(self.user.email, "Ab654321")
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('user:update', kwargs={'pk': self.user.pk})
-        # phone_number = PhoneNumber("+14155552671")
-        # json_string = json.dumps({'phone_number': phone_number}, cls=PhoneNumberEncoder)
-
         data = {
             'first_name': 'UpdatedFirstName',
             'last_name': 'UpdatedLastName',
             'phone_number': '+12345678901',
             
         }
-        # parsed_phone_number = parse(data['phone_number'], None)
-        # formatted_phone_number = phone_number.format_number(parsed_phone_number, PhoneNumberFormat.E164)
-        # data['phone_number'] = formatted_phone_number
         response = self.client.put(url, data, format='json')
-        
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['first_name'], data['first_name'])
         self.assertEqual(response.data['last_name'], data['last_name'])
@@ -106,20 +90,13 @@ class UserTest(APITestCase):
         token = self.login(self.user.email, "Ab654321")
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
         url = reverse('user:update', kwargs={'pk': self.user.pk + 1})
-        # phone_number = PhoneNumber("+14155552671")
-        # json_string = json.dumps({'phone_number': phone_number}, cls=PhoneNumberEncoder)
-
         data = {
             'first_name': 'UpdatedFirstName',
             'last_name': 'UpdatedLastName',
             'phone_number': '+12345678901',
             
         }
-        # parsed_phone_number = parse(data['phone_number'], None)
-        # formatted_phone_number = phone_number.format_number(parsed_phone_number, PhoneNumberFormat.E164)
-        # data['phone_number'] = formatted_phone_number
-        response = self.client.put(url, data, format='json')
-        
+        response = self.client.put(url, data, format='json')   
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
         return response.data
+    
