@@ -162,7 +162,6 @@ class IsRatedView(views.APIView):
             response.status_code = 200
         except:
             response = HttpResponse('User has not rated the advertisement')
-            # response.status_code = 400
         
         return response
 
