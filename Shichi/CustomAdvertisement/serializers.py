@@ -10,7 +10,7 @@ class customAdvertisementCreateSerializer(serializers.ModelSerializer):
         fields = ['id', 'owner_id', 'start_date', 'end_date', 'available_date_list', 'price', 'description', 'car_image1', 'car_image2', 'car_image3', 'car_name', 'car_color', 'car_produced_date','car_seat_count','car_door_count', 'car_Is_cooler', 'car_gearbox', 'car_fuel', 'car_category', 'location_state', 'location_geo_width', 'location_geo_length']
         read_only_fields = ['id', 'owner_id', 'available_date_list']  
 
-class customAdvertisementSerializer(serializers.ModelSerializer):
+class customAdvertisementSerializer(serializers.ModelSerializer): 
     #car_images = CustomCarImageSerializer(read_only=True, many=True)
     average_rating = serializers.SerializerMethodField()
 
