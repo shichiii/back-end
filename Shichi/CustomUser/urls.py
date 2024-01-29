@@ -24,7 +24,7 @@ urlpatterns = [
     path('updatewallet/<int:pk>/', RequestForWallet.as_view(), name='updateWallet'),
     # path('delete/<int:pk>/', DeleteCustomUser.as_view(), name='delete'),
     # path('delete/<int:user_id>/',  DeleteCustomUser, name='delete'),
-    path('delete/<int:pk>/', delete_custom_user, name='delete'),
+    path('delete/<int:user_id>/', delete_custom_user, name='delete'),
     
     
     
