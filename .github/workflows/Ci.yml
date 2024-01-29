@@ -1,0 +1,53 @@
+name: Quality Assurance
+on: [pull_request, workflow_call]
+
+jobs:
+  quality-assurance:
+    name: Quality Assurance
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        db: [postgres]
+        python-version: [3.11.2]
+        include:
+          - db: postgres
+            db_port: 5432
+
+    services:
+      db:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: shichidb
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 1234
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Pytest
+        env:
+          DB: ${{ matrix.db }}
+          DB_HOST: 'localhost'
+          DB_PORT: ${{ matrix.db_port }}
+          DB_PASSWORD: 1234
+        run: |
+          cd Shichi/
+          pytest

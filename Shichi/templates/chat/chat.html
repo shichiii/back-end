@@ -1,0 +1,34 @@
+<!-- chat/templates/chat/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Chat</title>
+</head>
+<body>
+    <input type="text" id="messageInput" autocomplete="off" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+    <div id="chat"></div>
+
+    <script>
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/chat/1/'  // Replace 'room_name' with the actual room name
+        );
+
+        chatSocket.onmessage = function(event) {
+            const message_dic = JSON.parse(event.data);
+            console.log(message_dic["message"])
+            document.getElementById('chat').innerHTML += '<p>' + message_dic["sender"]  + ":" + message_dic["message"] + '</p>';
+        };
+
+        function sendMessage() {
+            const messageInputDom = document.getElementById('messageInput');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        }
+    </script>
+</body>
+</html>
