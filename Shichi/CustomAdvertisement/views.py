@@ -114,6 +114,9 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
             queryset = queryset.filter(location_state__icontains=state_input)
 
         queryset = queryset.filter(price__range=(lower_price_input, upper_price_input))
+        
+        queryset = queryset.values('id').distinct()
+        
         return queryset
     
 class CommentViewSet(viewsets.ModelViewSet):
