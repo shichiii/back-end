@@ -9,6 +9,7 @@ from CustomDate.models import CustomDate
 from CustomHistories.models import CustomHistories
 from datetime import datetime, timedelta
 from django.db.models import Q
+from django.db.models import F
 
 class customAdvertisementShowView(generics.RetrieveAPIView):
     queryset = CustomAdvertisement.objects.all()
@@ -115,7 +116,7 @@ class CustomAdvertisementFilterView(generics.ListAPIView):
 
         queryset = queryset.filter(price__range=(lower_price_input, upper_price_input))
         
-        queryset = queryset.values('id').distinct()
+        queryset = queryset.annotate(min_id=F('id')).distinct('min_id')
         
         return queryset
     
